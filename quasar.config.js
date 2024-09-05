@@ -10,9 +10,9 @@
 
 
 const { configure } = require('quasar/wrappers');
+const path = require('path');
 
-
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   return {
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -21,7 +21,6 @@ module.exports = configure(function (/* ctx */) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      
       'axios',
     ],
 
@@ -34,7 +33,7 @@ module.exports = configure(function (/* ctx */) {
     extras: [
       // 'ionicons-v4',
       // 'mdi-v7',
-      // 'fontawesome-v6',
+      'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
       // 'line-awesome',
@@ -51,7 +50,7 @@ module.exports = configure(function (/* ctx */) {
         node: 'node20'
       },
 
-      vueRouterMode: 'hash', // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
       // vueRouterBase,
       // vueDevtools,
       // vueOptionsAPI: false,
@@ -60,7 +59,20 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      alias: {
+        utils: path.resolve(__dirname, './src/utils'),
+        composables: path.resolve(__dirname, './src/composables'),
+      },
+
+      env: {
+        API: ctx.dev
+        ? 'http://localhost/biblioteca/biblioteca-back/public/api/'
+        : 'https://hotel.cetpros.com/api/',
+        urlImg: ctx.dev
+        ? 'http://localhost/biblioteca/biblioteca-back/public'
+        : 'https://hotel.cetpros.com',
+        versionCode: 1,
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -90,7 +102,7 @@ module.exports = configure(function (/* ctx */) {
       config: {},
 
       // iconSet: 'material-icons', // Quasar icon set
-      // lang: 'en-US', // Quasar language pack
+      lang: 'es', // Quasar language pack
 
       // For special cases outside of where the auto-import strategy can have an impact
       // (like functional components as one of the examples),
@@ -100,7 +112,12 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: []
+      plugins: [
+      'Notify',
+      'Dialog',
+      'LocalStorage',
+      'SessionStorage',
+      ]
     },
 
     // animations: 'all', // --- includes all animations
