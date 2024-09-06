@@ -69,11 +69,11 @@ const form = ref({
 	name: '',
 	permissions: '',
 })
-const permissionsModel = ref(['Basic', 'Reservaciones', 'Recepción', 'Clientes'])
+const permissionsModel = ref(['Basic', 'Prestamos', 'Estudiantes', 'Libros'])
 
 
 const openDialog = () => {
-	permissionsModel.value = ['Basic', 'Reservaciones', 'Recepción', 'Clientes']
+	permissionsModel.value = ['Basic', 'Prestamos', 'Estudiantes', 'Libros']
 	form.value.name = ''
 	dialog.value = true
 	isUpdate.value = false
@@ -88,7 +88,7 @@ const initUpdate = () => {
 
 const methodForm = () => {
 	if(permissionsModel.value.length === 1) 
-		alertNotify('Seleccione como minino el permiso de Recepción.', 'warning')
+		alertNotify('Seleccione como minino el permiso de Prestamos.', 'warning')
 	else {
 		if(isUpdate.value)
 			update()

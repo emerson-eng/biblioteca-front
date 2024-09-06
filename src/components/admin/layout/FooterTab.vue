@@ -1,20 +1,16 @@
 <template>
 	<q-footer>
 		<q-tabs v-model="tab" shrink outside-arrows class="text-white">
-			<q-route-tab v-if="can('Recepción')" name="Home" :to="{ name: 'Home' }">
-				<q-icon name="fa-solid fa-house" size="20px" />
+			<q-route-tab v-if="can('Prestamos')" name="Home" :to="{ name: 'Home' }">
+				<q-icon name="fa-solid fa-hourglass-start" size="20px" />
 			</q-route-tab>
 
-			<q-route-tab v-if="can('Reservaciones')" name="ReservationAllPage" :to="{ name: 'ReservationAllPage' }">
-				<q-icon name="fa-regular fa-calendar-days" size="20px" />
-			</q-route-tab>
-
-			<q-route-tab v-if="can('Clientes')" name="ClientPage" :to="{ name: 'ClientPage' }">
+			<q-route-tab v-if="can('Estudiantes')" name="StudentPage" :to="{ name: 'StudentPage' }">
 				<q-icon name="fa-solid fa-users" size="20px" />
 			</q-route-tab>
 
-			<q-route-tab v-if="can('Compras')" name="BuysPage" :to="{ name: 'BuysPage' }">
-				<q-icon name="fa-solid fa-boxes-stacked" size="20px" />
+			<q-route-tab v-if="can('Libros')" name="BooksPage" :to="{ name: 'BooksPage' }">
+				<q-icon name="fa-solid fa-book" size="20px" />
 			</q-route-tab>
 
 			<q-route-tab v-if="can('Usuario')" name="UsersPage" :to="{ name: 'UsersPage' }">

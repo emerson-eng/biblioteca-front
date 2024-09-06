@@ -5,7 +5,7 @@
 				<q-icon name="fa-solid fa-indent" size="sm" />
 				Clientes
 			</div>
-			<create-client
+			<create-student
 			:selectRow="selectRow" 
 			/>
 		</h5>
@@ -27,7 +27,7 @@ import { ref, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
 import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
-import CreateClient from 'components/admin/dialogs/CreateClient.vue'
+import CreateStudent from 'components/admin/dialogs/CreateStudent.vue'
 import useHttpService from 'utils/httpService'
 
 const $q = useQuasar()

@@ -1,19 +1,15 @@
 export const permissions = [
 {
-	label: 'Recepción',
-	value: 'Recepción',
+	label: 'Prestamos',
+	value: 'Prestamos',
 },
 {
-	label: 'Reservaciones',
-	value: 'Reservaciones',
+	label: 'Estudiantes',
+	value: 'Estudiantes',
 },
 {
-	label: 'Clientes',
-	value: 'Clientes',
-},
-{
-	label: 'Compras',
-	value: 'Compras',
+	label: 'Libros',
+	value: 'Libros',
 },
 {
 	label: 'Usuario',
@@ -24,23 +20,19 @@ export const permissions = [
 	value: 'Reportes',
 },
 {
-	label: 'Configuración/Habitación',
-	value: 'Configuración/Habitación',
+	label: 'Configuración/Institución',
+	value: 'Configuración/Institución',
 },
 {
-	label: 'Configuración/Producto',
-	value: 'Configuración/Producto',
+	label: 'Configuración/Materias',
+	value: 'Configuración/Materias',
 },
 {
-	label: 'Configuración/Compra',
-	value: 'Configuración/Compra',
+	label: 'Configuración/Autores',
+	value: 'Configuración/Autores',
 },
 {
-	label: 'Configuración/Hotel',
-	value: 'Configuración/Hotel',
-},
-{
-	label: 'Configuración/Pagina Web',
-	value: 'Configuración/Pagina Web',
+	label: 'Configuración/Editoriales',
+	value: 'Configuración/Editoriales',
 },
 ]
