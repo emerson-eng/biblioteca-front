@@ -1,106 +1,91 @@
 <template>
-  <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
-      <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
+	<q-layout :view="$q.platform.is.mobile ? 'lHh Lpr lFf' : 'hHh Lpr fff'" class="bg-body">
+		<q-header elevated class="bg-primary">
+			<q-toolbar v-if="userPinia.isAuthenticated">
+				<q-btn v-if="$q.screen.width < 1024"
+				flat dense round
+				icon="menu"
+				@click="toggleLeftDrawer"
+				/>
+				<q-btn v-else
+				flat dense round
+				icon="menu"
+				@click="miniState = !miniState"
+				/>
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+				<q-space />
 
-        <div>Quasar v{{ $q.version }}</div>
-      </q-toolbar>
-    </q-header>
+				<menu-user />
+				<notification-user />
+			</q-toolbar>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
-      <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
+			<q-toolbar v-else>
+				<q-btn round flat class="q-ml-md">
+					<q-avatar size="xl">
+						<img src="/logo/logo.png">
+					</q-avatar>
+				</q-btn>
+			</q-toolbar>
+		</q-header>
 
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
-      </q-list>
-    </q-drawer>
+		<q-drawer v-if="userPinia.isAuthenticated" v-model="leftDrawerOpen" :mini="miniState" :width="$q.screen.width < 700 ? 270 : 250" show-if-above>
+			<q-list padding>
+				<q-item v-ripple class="q-mt-xs" :class="miniState ? '' : 'q-mx-sm'">
+					<q-item-section v-if="miniState" avatar>
+						<q-avatar size="xl">
+							<q-img 
+							src="/logo/logo.png"
+							spinner-color="primary" 
+							/>
+						</q-avatar>
+					</q-item-section>
+					<q-img v-else
+					src="/logo/logo-baner.png"
+					spinner-color="primary" 
+					/>
+				</q-item>
+				<q-separator class="q-my-md bg-primary" />
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+				<essential-Link></essential-Link>
+			</q-list>
+		</q-drawer>
+
+		<q-page-container class="page-wrapper-admin">
+			<router-view />
+		</q-page-container>
+
+		<footer-componente v-if="$q.screen.width > 700"></footer-componente>
+		<footer-tab v-if="$q.platform.is.mobile && userPinia.isAuthenticated" />
+	</q-layout>
 </template>
 
+<style scoped>
+.text-height-plan {
+	line-height: 11pt!important;
+}
+</style>
+
 <script setup>
-import { ref } from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { defineAsyncComponent, ref, provide } from 'vue'
+import { useUserStore } from 'stores/user'
+import { urlImg } from 'boot/axios'
+import useFormatDate from 'utils/formatDate'
+import EssentialLink from 'components/admin/layout/EssentialLink.vue'
+import MenuUser from 'components/user/dialogs/MenuUser.vue'
+import NotificationUser from 'components/user/NotificationUser.vue'
+import FooterTab from 'components/admin/layout/FooterTab.vue'
+const FooterComponente = defineAsyncComponent(() => import('components/admin/layout/FooterComponent.vue')) 
 
-defineOptions({
-  name: 'MainLayout'
-})
-
-const linksList = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-]
+const userPinia = useUserStore()
+const { formatDatePlan } = useFormatDate()
 
 const leftDrawerOpen = ref(false)
+const miniState = ref(false)
 
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value
+provide('miniState', miniState)
+
+const toggleLeftDrawer = () => {
+	leftDrawerOpen.value = !leftDrawerOpen.value
 }
+
 </script>

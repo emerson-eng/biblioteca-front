@@ -1,1 +1,58 @@
 // app global css in SCSS form
+.page-wrapper {
+	max-width: 1300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.page-wrapper-admin {
+	max-width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.bg-body {
+	background: #E8EEF1 !important;
+}
+.rowClassPadding td {
+	padding-top: 11px !important;
+	padding-bottom: 11px !important;
+}
+.router-link-active {
+	background: rgba(255, 255, 255, 0.3) !important;
+}
+
+.disable-decoration {
+	text-decoration: none !important;
+}
+
+.my-card {
+}
+.my-card:hover {
+	transform: translateY(-2px) scale(1.005) translateZ(0);
+	box-shadow: 0 24px 36px rgba(0,0,0,0.11),
+	0 24px 46px var(--box-shadow-color);
+}
+
+.my-card-phone {
+}
+.my-card-phone:active {
+	transform: translateY(-2px) scale(1.005) translateZ(0);
+	box-shadow: 0 24px 36px rgba(0,0,0,0.11),
+	0 24px 46px var(--box-shadow-color);
+}
+
+.q-field--disabled .q-field__inner {
+	cursor: default !important;
+}
+
+.border-item-list {
+	border: 1px solid #cfd8dc !important;
+}
+
+
+.text-height {
+	line-height: 14pt!important;
+}
+
+.tab-phone {
+	padding: 0 8px; 
+}
