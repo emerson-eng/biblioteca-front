@@ -39,7 +39,38 @@ let adminRoutes = [
 	}
 },
 // Setting
-
+{ 
+	path: 'configuracion/institucion', name: 'InstitutionPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/InstitutionPage.vue'),
+	meta: {
+		permissions: ['Configuración/Institución']
+	}
+},
+{ 
+	path: 'configuracion/materias', name: 'MattersPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/MattersPage.vue'),
+	meta: {
+		permissions: ['Configuración/Materias']
+	}
+},
+{ 
+	path: 'configuracion/autores', name: 'AuthorsPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/AuthorsPage.vue'),
+	meta: {
+		permissions: ['Configuración/Autores']
+	}
+},
+{ 
+	path: 'configuracion/editoriales', name: 'EditorialsPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/EditorialsPage.vue'),
+	meta: {
+		permissions: ['Configuración/Editoriales']
+	}
+},
 
 ]
 

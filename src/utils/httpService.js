@@ -16,7 +16,6 @@ const header = () => {
 		timeout: 35000,
 		headers: { 
 			Authorization: `Bearer ${userPinia.token}`,
-			hotelId: userPinia.user?.hotel_id,
 			userId: userPinia.user?.id,
 		}
 	}

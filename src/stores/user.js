@@ -11,12 +11,12 @@ export const useUserStore = defineStore('user', {
 	},
 	
 	actions: {
-		setUser(user) {
-			this.user = user
+		setUser(val) {
+			this.user = val
 		},
 
-		setToken(token) {
-			this.token = token
+		setToken(val) {
+			this.token = val
 		},
 		
 	},

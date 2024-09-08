@@ -27,23 +27,15 @@
 								
 							</div>
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
-								<input-ruc v-if="documentTypeSelected == 'RUC'" />
-								<input-dni v-else-if="documentTypeSelected == 'DNI'" />
-								<q-input v-else
+								<q-input 
 								v-model="form.dni"
-								type="text" label="Número de documento"
-								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese el número del documento']"
+								type="number" label="DNI"
+								lazy-rules :rules="[ val => (val !== null && val !== '') || 'Ingrese el DNI', val => (val+'').length == 8 || 'Ingrese correctamente el número de DNI']"
 								/>
 							</div>
 						</div>
 
-						<q-input v-if="documentTypeSelected == 'RUC'"
-						v-model="form.business_name"
-						type="text" label="Nombre o Razón social"
-						lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese el nombre o razón social']"
-						/>
-
-						<div v-else class="row">
+						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
 								<q-input v-model="form.name"
 								type="text" label="Nombres"
@@ -59,7 +51,7 @@
 						</div>
 
 						<q-input v-model="form.address"
-						type="text" label="Dirección o nacionalidad"
+						type="text" label="Dirección"
 						hint="Opcional"
 						/>
 
@@ -68,9 +60,9 @@
 						hint="Opcional"
 						/>
 
-						<q-input v-model="form.phone" type="number"
-						label="Número de celular"
-						hint="Opcional"
+						<q-input v-model="form.phone" 
+						type="number" label="Número de celular"
+						lazy-rules :rules="[ val => val && val > 0 || 'Ingrese el número de celular']"
 						/>
 
 						<q-btn rounded :loading="loadingBtn" :disable="loadingBtn" color="primary" type="submit" icon="save" :label="isUpdate ? 'Actualizar' : 'Registrar'" class="q-mt-md">
@@ -90,8 +82,6 @@ import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
 import { useUserStore } from 'stores/user'
 import useHttpService from 'utils/httpService'
-import InputDni from 'components/admin/form/InputDni.vue'
-import InputRuc from 'components/admin/form/InputRuc.vue'
 
 const dataTablePinia = useDataTableStore()
 const userPinia = useUserStore()
@@ -111,29 +101,24 @@ const dialog = inject('dialog')
 const isUpdate = inject('isUpdate')
 
 const loadingBtn = ref(false)
-const documentTypeSelected = ref('DNI')
+const typePeopleSelected = ref(null)
 const form = ref({
 	id: 1,
-	ruc: null,
 	dni: '',
 	name: '',
 	last_name: '',
-	business_name: '',
 	address: '',
 	email: '',
 	phone: '',
 })
 
-provide('documentTypeSelected', documentTypeSelected)
-provide('form', form)
+provide('typePeopleSelected', typePeopleSelected)
 
 const openDialog = () => {
-	documentTypeSelected.value = 'DNI'
-	form.value.ruc = null
+	typePeopleSelected.value = null
 	form.value.dni = ''
 	form.value.name = ''
 	form.value.last_name = ''
-	form.value.business_name = ''
 	form.value.address = ''
 	form.value.email = ''
 	form.value.phone = ''
@@ -143,13 +128,11 @@ const openDialog = () => {
 
 const initUpdate = () => {
 	if(isUpdate.value) {
-		documentTypeSelected.value = props.selectRow.document_type
+		typePeopleSelected.value = props.selectRow.type_people
 		form.value.id = props.selectRow.id
-		form.value.ruc = props.selectRow.dni
 		form.value.dni = props.selectRow.dni
 		form.value.name = props.selectRow.name
 		form.value.last_name = props.selectRow.last_name
-		form.value.business_name = props.selectRow.business_name
 		form.value.address = props.selectRow.address
 		form.value.email = props.selectRow.email
 		form.value.phone = props.selectRow.phone
@@ -166,11 +149,11 @@ const methodForm = () => {
 const register = () => {
 	loadingBtn.value = true
 	setData()
-	post('admin/client', form.value).then(response => {
+	post('admin/student', form.value).then(response => {
 		console.log('register', response)
 		if(response.status >= 200 && response.status < 300) {
-			let clients = [response.data.data, ...dataTablePinia.clients]
-			dataTablePinia.setClients(clients)
+			let students = [response.data.data, ...dataTablePinia.students]
+			dataTablePinia.setStudents(students)
 			dialog.value = false
 		}
 	}).finally(() => {
@@ -181,16 +164,16 @@ const register = () => {
 const update = () => {
 	loadingBtn.value = true
 	setData()
-	const url = `admin/client/${props.selectRow.id}`
+	const url = `admin/student/${props.selectRow.id}`
 	put(url, form.value).then((response) => {
 		console.log('update', response)
 		if(response.status >= 200 && response.status < 300) {
-			let clients = dataTablePinia.clients.map((item) => {
+			let students = dataTablePinia.students.map((item) => {
 				if(item.id == response.data.data.id)
 					item = response.data.data
 				return item
 			})
-			dataTablePinia.setClients(clients)
+			dataTablePinia.setStudents(students)
 			dialog.value = false
 		}
 	}).finally(() => {
@@ -199,8 +182,6 @@ const update = () => {
 }
 
 const setData = () => {
-	form.value.dni = documentTypeSelected.value == 'RUC' ? form.value.ruc : form.value.dni
-	form.value.hotel_id = userPinia.user.hotel_id
-	form.value.document_type = documentTypeSelected.value
+	form.value.type_people_id = typePeopleSelected.value.value
 }
 </script>

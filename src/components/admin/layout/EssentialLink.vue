@@ -35,7 +35,7 @@
 			<q-item-section>Reportes</q-item-section>
 		</q-item>
 
-		<q-expansion-item v-if="canany(['Configuración/Institución', 'Configuración/Materias', 'Configuración/Autores', 'Configuración/Editoriales'])" :model-value="isExpansionItem(['RoomPage', 'ProductPage', 'BuyPage', 'WebPage', 'HotelPage'])" :content-inset-level="0.5" expand-separator @click="miniState = false">
+		<q-expansion-item v-if="canany(['Configuración/Institución', 'Configuración/Materias', 'Configuración/Autores', 'Configuración/Editoriales'])" :model-value="isExpansionItem(['InstitutionPage', 'MattersPage', 'AuthorsPage', 'EditorialsPage'])" :content-inset-level="0.5" expand-separator @click="miniState = false">
 			<template v-slot:header>
 				<q-item-section avatar>
 					<q-avatar>
@@ -45,25 +45,25 @@
 				<q-item-section>Configuración</q-item-section>
 			</template>
 
-			<q-item v-if="can('Configuración/Institución')" clickable v-ripple :to="{ name: 'RoomPage' }" active-class="text-primary">
+			<q-item v-if="can('Configuración/Institución')" clickable v-ripple :to="{ name: 'InstitutionPage' }" active-class="text-primary">
 				<q-item-section avatar>
 					<q-icon name="fa-solid fa-school" size="28px"/>
 				</q-item-section>
 				<q-item-section>Institución</q-item-section>
 			</q-item>
-			<q-item v-if="can('Configuración/Materias')" clickable v-ripple :to="{ name: 'ProductPage' }" active-class="text-primary">
+			<q-item v-if="can('Configuración/Materias')" clickable v-ripple :to="{ name: 'MattersPage' }" active-class="text-primary">
 				<q-item-section avatar>
 					<q-icon name="fa-solid fa-tags" size="28px"/>
 				</q-item-section>
 				<q-item-section>Materias</q-item-section>
 			</q-item>
-			<q-item v-if="can('Configuración/Autores')" clickable v-ripple :to="{ name: 'BuyPage' }" active-class="text-primary">
+			<q-item v-if="can('Configuración/Autores')" clickable v-ripple :to="{ name: 'AuthorsPage' }" active-class="text-primary">
 				<q-item-section avatar>
 					<q-icon name="fa-solid fa-user-pen" size="28px"/>
 				</q-item-section>
 				<q-item-section>Autores</q-item-section>
 			</q-item>
-			<q-item v-if="can('Configuración/Editoriales')" clickable v-ripple :to="{ name: 'HotelPage' }" active-class="text-primary">
+			<q-item v-if="can('Configuración/Editoriales')" clickable v-ripple :to="{ name: 'EditorialsPage' }" active-class="text-primary">
 				<q-item-section avatar>
 					<q-icon name="fa-solid fa-newspaper" size="28px"/>
 				</q-item-section>
