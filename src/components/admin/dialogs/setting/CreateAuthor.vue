@@ -56,10 +56,8 @@ const swithModels = inject('swithModels')
 
 const loadingBtn = ref(false)
 const form = ref({
-	hotel_id: 1,
 	name: '',
 })
-
 
 const openDialog = () => {
 	form.value.name = ''
