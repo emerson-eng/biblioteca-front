@@ -2,9 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useLoanStore = defineStore('loan', {
 	state: () => ({
-		loans: [],
 		//Loans
-		students: [],
 		books: [],
 		//Books
 		matters: [],
@@ -13,13 +11,6 @@ export const useLoanStore = defineStore('loan', {
 	}),	
 	
 	actions: {
-		setLoans(val) {
-			this.loans = val
-		},
-
-		setStudents(val) {
-			this.students = val
-		},
 		setBooks(val) {
 			this.books = val
 		},

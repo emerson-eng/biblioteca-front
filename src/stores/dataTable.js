@@ -2,8 +2,11 @@ import { defineStore } from 'pinia'
 
 export const useDataTableStore = defineStore('dataTable', {
 	state: () => ({
+		//Loans
+		loans: [],
 		//Students
 		students: [],
+		typePersons: [],
 		//Books
 		books: [],
 		//User
@@ -17,8 +20,15 @@ export const useDataTableStore = defineStore('dataTable', {
 	}),
 	
 	actions: {
+		setLoans(val) {
+			this.loans = val
+		},
+		
 		setStudents(val) {
 			this.students = val
+		},
+		setTypePersons(val) {
+			this.typePersons = val
 		},
 
 		setBooks(val) {
