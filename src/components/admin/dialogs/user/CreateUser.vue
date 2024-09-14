@@ -54,13 +54,11 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
-import { useUserStore } from 'stores/user'
 import { useQuasar } from 'quasar'
 import useHttpService from 'utils/httpService'
 import SelectRole from 'components/admin/form/SelectRole.vue'
 
 const dataTablePinia = useDataTableStore()
-const userPinia = useUserStore()
 const { post, put } =  useHttpService()
 const $q = useQuasar()
 
@@ -166,7 +164,6 @@ const update = () => {
 }
 
 const setData = () => {
-	form.value.hotel_id = userPinia.user.hotel_id
 	form.value.role_id = roleSelected.value.value
 }
 </script>

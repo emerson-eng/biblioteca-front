@@ -82,7 +82,6 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
-import { useUserStore } from 'stores/user'
 import useHttpService from 'utils/httpService'
 import SelectMatter from 'components/admin/form/SelectMatter.vue'
 import SelectAuthor from 'components/admin/form/SelectAuthor.vue'
@@ -90,7 +89,6 @@ import SelectEditorial from 'components/admin/form/SelectEditorial.vue'
 import useAlerts from 'utils/alerts'
 
 const dataTablePinia = useDataTableStore()
-const userPinia = useUserStore()
 const { post, put } =  useHttpService()
 const { alertNotify } = useAlerts()
 

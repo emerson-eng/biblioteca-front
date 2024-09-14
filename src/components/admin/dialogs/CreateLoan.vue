@@ -1,21 +1,16 @@
 <template>
 	<div>
-		<q-btn v-if="showIcon"
+		<q-btn
 		color="primary"
 		label="Nuevo"
 		icon="fa-solid fa-circle-plus"
-		@click="openDialog"
-		/>
-		<q-btn v-else
-		color="primary"
-		label="Nuevo"
 		@click="openDialog"
 		/>
 
 		<q-dialog v-model="dialog" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate">
 			<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
 				<q-card-section class="row items-center q-pb-none">
-					<div class="text-h6 text-color-dark text-bold">Registrar cliente</div>
+					<div class="text-h6 text-color-dark text-bold">Registrar prestamo</div>
 					<q-space />
 					<q-btn icon="close" flat round dense v-close-popup />
 				</q-card-section>
@@ -23,49 +18,41 @@
 				<q-card-section>
 					<q-form @submit="methodForm" class="column q-pb-md">
 						<div class="row">
-							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
-								<select-type-person
+							<div class="col-12 col-sm-9" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
+								<select-book
 								:useInject="true"
-								:selected="true"
 								/>
 							</div>
-							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
-								<q-input 
-								v-model="form.dni"
-								type="number" label="DNI"
-								lazy-rules :rules="[ val => (val !== null && val !== '') || 'Ingrese el DNI', val => (val+'').length == 8 || 'Ingrese correctamente el número de DNI']"
+							<div class="col-12 col-sm-3" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
+								<q-input v-model="form.quantity" 
+								type="number" label="Cantidad"
+								lazy-rules :rules="[ val => val && val > 0 || 'Ingrese la cantidad']"
 								/>
 							</div>
 						</div>
+
+						<select-student
+						:useInject="true"
+						/>
 
 						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
-								<q-input v-model="form.name"
-								type="text" label="Nombres"
-								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese los nombres']"
+								<q-input v-model="form.loan_date"
+								type="text" label="Fecha de préstamo"
+								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de préstamo']"
 								/>
 							</div>
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
-								<q-input v-model="form.last_name"
-								type="text" label="Apellidos"
-								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese los apellidos']"
+								<q-input v-model="form.return_date"
+								type="text" label="Fecha de devolución"
+								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de devolución']"
 								/>
 							</div>
 						</div>
 
-						<q-input v-model="form.address"
-						type="text" label="Dirección"
+						<q-input v-model="form.observation"
+						type="textarea" label="Observación"
 						hint="Opcional"
-						/>
-
-						<q-input v-model="form.email"
-						type="email" label="Correo electrónico"
-						hint="Opcional"
-						/>
-
-						<q-input v-model="form.phone" 
-						type="number" label="Número de celular"
-						lazy-rules :rules="[ val => val && val > 0 || 'Ingrese el número de celular']"
 						/>
 
 						<q-btn rounded :loading="loadingBtn" :disable="loadingBtn" color="primary" type="submit" icon="save" :label="isUpdate ? 'Actualizar' : 'Registrar'" class="q-mt-md">
@@ -83,19 +70,20 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useUserStore } from 'stores/user'
+import useFormatDate from 'utils/formatDate'
 import useHttpService from 'utils/httpService'
-import SelectTypePerson from 'components/admin/form/SelectTypePerson.vue'
+import SelectBook from 'components/admin/form/SelectBook.vue'
+import SelectStudent from 'components/admin/form/SelectStudent.vue'
 
 const dataTablePinia = useDataTableStore()
+const userPinia = useUserStore()
 const { post, put } =  useHttpService()
+const { formatCurrentDate } = useFormatDate()
 
 const props = defineProps({
 	selectRow: {
 		type: Object,
-	},
-	showIcon: {
-		type: Boolean,
-		default: true
 	},
 })
 
@@ -103,41 +91,43 @@ const dialog = inject('dialog')
 const isUpdate = inject('isUpdate')
 
 const loadingBtn = ref(false)
-const typePersonSelected = ref(null)
 const form = ref({
-	id: 1,
-	dni: '',
-	name: '',
-	last_name: '',
-	address: '',
-	email: '',
-	phone: '',
+	student_id: 1,
+	book_id: 1,
+	loan_date: formatCurrentDate(),
+	return_date: formatCurrentDate(),
+	quantity: 1,
+	observation: '',
 })
+const bookSelected = ref(null)
+const studentSelected = ref(null)
 
-provide('typePersonSelected', typePersonSelected)
+provide('bookSelected', bookSelected)
+provide('studentSelected', studentSelected)
 
 const openDialog = () => {
-	typePersonSelected.value = null
-	form.value.dni = ''
-	form.value.name = ''
-	form.value.last_name = ''
-	form.value.address = ''
-	form.value.email = ''
-	form.value.phone = ''
+	bookSelected.value = null
+	studentSelected.value = null
+	form.value = {
+		student_id: 1,
+		book_id: 1,
+		loan_date: formatCurrentDate(),
+		return_date: formatCurrentDate(),
+		quantity: 1,
+		observation: '',
+	}
 	dialog.value = true
 	isUpdate.value = false
 }
 
 const initUpdate = () => {
 	if(isUpdate.value) {
-		typePersonSelected.value = props.selectRow.type_people
-		form.value.id = props.selectRow.id
-		form.value.dni = props.selectRow.dni
-		form.value.name = props.selectRow.name
-		form.value.last_name = props.selectRow.last_name
-		form.value.address = props.selectRow.address
-		form.value.email = props.selectRow.email
-		form.value.phone = props.selectRow.phone
+		bookSelected.value = props.selectRow.book
+		studentSelected.value = {
+			label: `${props.selectRow.student.name} ${props.selectRow.student.last_name} - ${props.selectRow.student.dni}`,
+			value: data[i].id
+		}
+		form.value = {...props.selectRow}
 	}
 }
 
@@ -151,11 +141,11 @@ const methodForm = () => {
 const register = () => {
 	loadingBtn.value = true
 	setData()
-	post('admin/student', form.value).then(response => {
+	post('admin/loan', form.value).then(response => {
 		console.log('register', response)
 		if(response.status >= 200 && response.status < 300) {
-			let students = [response.data.data, ...dataTablePinia.students]
-			dataTablePinia.setStudents(students)
+			let loans = [response.data.data, ...dataTablePinia.loans]
+			dataTablePinia.setLoans(loans)
 			dialog.value = false
 		}
 	}).finally(() => {
@@ -166,16 +156,16 @@ const register = () => {
 const update = () => {
 	loadingBtn.value = true
 	setData()
-	const url = `admin/student/${props.selectRow.id}`
+	const url = `admin/loan/${props.selectRow.id}`
 	put(url, form.value).then((response) => {
 		console.log('update', response)
 		if(response.status >= 200 && response.status < 300) {
-			let students = dataTablePinia.students.map((item) => {
+			let loans = dataTablePinia.loans.map((item) => {
 				if(item.id == response.data.data.id)
 					item = response.data.data
 				return item
 			})
-			dataTablePinia.setStudents(students)
+			dataTablePinia.setLoans(loans)
 			dialog.value = false
 		}
 	}).finally(() => {
@@ -184,6 +174,8 @@ const update = () => {
 }
 
 const setData = () => {
-	form.value.type_people_id = typePersonSelected.value.value
+	form.value.book_id = bookSelected.value.value
+	form.value.student_id = studentSelected.value.value
+	form.value.user_id = userPinia.user.id
 }
 </script>

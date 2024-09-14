@@ -37,11 +37,9 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
-import { useUserStore } from 'stores/user'
 import useHttpService from 'utils/httpService'
 
 const dataTablePinia = useDataTableStore()
-const userPinia = useUserStore()
 const { post, put } =  useHttpService()
 
 const props = defineProps({

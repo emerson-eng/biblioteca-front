@@ -44,13 +44,11 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
-import { useUserStore } from 'stores/user'
 import useHttpService from 'utils/httpService'
 import useAlerts from 'utils/alerts'
 import { permissions } from 'composables/permissions'
 
 const dataTablePinia = useDataTableStore()
-const userPinia = useUserStore()
 const { post, put } =  useHttpService()
 const { alertNotify } = useAlerts()
 

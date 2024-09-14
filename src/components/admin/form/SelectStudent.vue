@@ -64,7 +64,7 @@ const formatData = (data) => {
 	}
 	for(let i = 0; i < data.length; i++) {
 		const item = {
-			label: data[i].name,
+			label: `${data[i].name} ${data[i].last_name} - ${data[i].dni}`,
 			value: data[i].id
 		}
 		newData.push(item)
