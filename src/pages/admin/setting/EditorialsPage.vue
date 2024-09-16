@@ -29,6 +29,7 @@
 <script setup>
 import { ref, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateEditorial from 'components/admin/dialogs/setting/CreateEditorial.vue'
@@ -36,6 +37,7 @@ import useHttpService from 'utils/httpService'
 
 const $q = useQuasar()
 const dataTablePinia = useDataTableStore()
+const loanPinia = useLoanStore()
 const { get, put, deleteApi } =  useHttpService()
 
 const columns = [
@@ -115,6 +117,7 @@ const changeSwith = (row) => {
 				return item
 			})
 			dataTablePinia.setEditorials(editorials)
+			loanPinia.setEditorials([])
 		}
 	}).finally(() => {
 		loadingSwith.value = false
@@ -131,6 +134,7 @@ const deleteRow = (row) => {
 		if(response.status >= 200 && response.status < 300) {
 			let data = dataTablePinia.editorials.filter((item) => item.id != row.id)
 			dataTablePinia.setEditorials(data)
+			loanPinia.setEditorials([])
 		}
 	})
 }

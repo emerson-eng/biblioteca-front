@@ -24,7 +24,7 @@
 					<q-form @submit="methodForm" class="column q-pb-md">
 						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
-								<select-type-person
+								<select-type-student
 								:useInject="true"
 								:selected="true"
 								/>
@@ -84,7 +84,7 @@
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
 import useHttpService from 'utils/httpService'
-import SelectTypePerson from 'components/admin/form/SelectTypePerson.vue'
+import SelectTypeStudent from 'components/admin/form/SelectTypeStudent.vue'
 
 const dataTablePinia = useDataTableStore()
 const { post, put } =  useHttpService()
@@ -103,7 +103,7 @@ const dialog = inject('dialog')
 const isUpdate = inject('isUpdate')
 
 const loadingBtn = ref(false)
-const typePersonSelected = ref(null)
+const typeStudentSelected = ref(null)
 const form = ref({
 	id: 1,
 	dni: '',
@@ -114,10 +114,10 @@ const form = ref({
 	phone: '',
 })
 
-provide('typePersonSelected', typePersonSelected)
+provide('typeStudentSelected', typeStudentSelected)
 
 const openDialog = () => {
-	typePersonSelected.value = null
+	typeStudentSelected.value = null
 	form.value.dni = ''
 	form.value.name = ''
 	form.value.last_name = ''
@@ -130,7 +130,10 @@ const openDialog = () => {
 
 const initUpdate = () => {
 	if(isUpdate.value) {
-		typePersonSelected.value = props.selectRow.type_people
+		typeStudentSelected.value = {
+			label: props.selectRow.type_student.name,
+			value: props.selectRow.type_student.id,
+		}
 		form.value.id = props.selectRow.id
 		form.value.dni = props.selectRow.dni
 		form.value.name = props.selectRow.name
@@ -184,6 +187,6 @@ const update = () => {
 }
 
 const setData = () => {
-	form.value.type_people_id = typePersonSelected.value.value
+	form.value.type_student_id = typeStudentSelected.value.value
 }
 </script>

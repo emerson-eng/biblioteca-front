@@ -82,6 +82,7 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import useHttpService from 'utils/httpService'
 import SelectMatter from 'components/admin/form/SelectMatter.vue'
 import SelectAuthor from 'components/admin/form/SelectAuthor.vue'
@@ -89,7 +90,8 @@ import SelectEditorial from 'components/admin/form/SelectEditorial.vue'
 import useAlerts from 'utils/alerts'
 
 const dataTablePinia = useDataTableStore()
-const { post, put } =  useHttpService()
+const loanPinia = useLoanStore()
+const { post } =  useHttpService()
 const { alertNotify } = useAlerts()
 
 const props = defineProps({
@@ -155,7 +157,7 @@ const initUpdate = () => {
 			label: props.selectRow.editorial.name,
 			value: props.selectRow.editorial.id
 		}
-		form.value = {...props.selectRowdo}
+		form.value = {...props.selectRow}
 		form.value.image = null
 	}
 }
@@ -165,6 +167,7 @@ const methodForm = () => {
 		update()
 	else
 		register()
+	loanPinia.setBooks([])
 }
 
 const register = () => {
@@ -186,8 +189,8 @@ const register = () => {
 
 const update = () => {
 	loadingBtn.value = true
-	const url = `admin/book/${props.selectRow.id}`
-	put(url, formatData()).then((response) => {
+	const url = `admin/book/update/${props.selectRow.id}`
+	post(url, formatData()).then((response) => {
 		console.log('update', response)
 		if(response.status >= 200 && response.status < 300) {
 			let books = dataTablePinia.books.map((item) => {

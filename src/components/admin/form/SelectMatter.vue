@@ -51,7 +51,7 @@ const { get } = userHttpService()
 
 
 const matterSelected = props.useInject ? inject('matterSelected') : ref(null)
-const editorials = ref([])
+const matters = ref([])
 const optionsData = ref([])
 
 const formatData = (data) => {
@@ -70,7 +70,7 @@ const formatData = (data) => {
 		}
 		newData.push(item)
 	}
-	editorials.value = newData
+	matters.value = newData
 	optionsData.value = newData
 }
 
@@ -84,10 +84,10 @@ const getData= () => {
 		}
 	})
 }
-if(loanPinia.editorials.length == 0)
+if(loanPinia.matters.length == 0)
 	getData()
 else
-	formatData(loanPinia.editorials)
+	formatData(loanPinia.matters)
 
 
 const isSelected = (val) => {
@@ -97,7 +97,7 @@ const isSelected = (val) => {
 const filterFn = (val, update, abort) => {
 	update(() => {
 		const needle = val.toLowerCase()
-		optionsData.value = editorials.value.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+		optionsData.value = matters.value.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
 	})
 }
 

@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<q-select
-		v-model="typePersonSelected"
+		v-model="typeStudentSelected"
 		:options="optionsData"
 		label="Tipo"
 		lazy-rules
@@ -33,7 +33,7 @@ const dataTablePinia = useDataTableStore()
 const { get } = userHttpService()
 
 
-const typePersonSelected = props.useInject ? inject('typePersonSelected') : ref(null)
+const typeStudentSelected = props.useInject ? inject('typeStudentSelected') : ref(null)
 const optionsData = ref([])
 
 
@@ -48,24 +48,24 @@ const formatData = (data) => {
 	}
 	optionsData.value = newData
 	if(props.selected) {
-		typePersonSelected.value = newData[0]
+		typeStudentSelected.value = newData[0]
 	}
 }
 
 const getData= () => {
-	get('admin/type-person', false).then((response) => {
-		console.log('type-person', response)
+	get('admin/type-student', false).then((response) => {
+		console.log('type-student', response)
 		if(response.status >= 200 && response.status < 300) {
 			let data = response.data.data
 			formatData(data)
-			dataTablePinia.setTypePersons(data)
+			dataTablePinia.setTypeStudents(data)
 		}
 	})
 }
-if(dataTablePinia.typePersons.length == 0)
+if(dataTablePinia.typeStudents.length == 0)
 	getData()
 else
-	formatData(dataTablePinia.typePersons)
+	formatData(dataTablePinia.typeStudents)
 
 const isSelected = (val) => {
 	emit('isSelected', val)

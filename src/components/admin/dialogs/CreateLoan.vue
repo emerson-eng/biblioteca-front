@@ -38,13 +38,13 @@
 						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
 								<q-input v-model="form.loan_date"
-								type="text" label="Fecha de préstamo"
+								type="date" label="Fecha de préstamo"
 								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de préstamo']"
 								/>
 							</div>
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
 								<q-input v-model="form.return_date"
-								type="text" label="Fecha de devolución"
+								type="date" label="Fecha de devolución"
 								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de devolución']"
 								/>
 							</div>
@@ -122,10 +122,13 @@ const openDialog = () => {
 
 const initUpdate = () => {
 	if(isUpdate.value) {
-		bookSelected.value = props.selectRow.book
+		bookSelected.value = {
+			label: props.selectRow.book.name,
+			value: props.selectRow.book.id,
+		}
 		studentSelected.value = {
 			label: `${props.selectRow.student.name} ${props.selectRow.student.last_name} - ${props.selectRow.student.dni}`,
-			value: data[i].id
+			value: props.selectRow.student.id
 		}
 		form.value = {...props.selectRow}
 	}

@@ -34,15 +34,19 @@
 <script setup>
 import { ref, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateBook from 'components/admin/dialogs/CreateBook.vue'
 import ZoomImage from 'components/admin/dialogs/ZoomImage.vue'
 import useHttpService from 'utils/httpService'
+import useHelpers from 'utils/helpers'
 
 const $q = useQuasar()
 const dataTablePinia = useDataTableStore()
+const loanPinia = useLoanStore()
 const { get, put, deleteApi } =  useHttpService()
+const { maxText } =  useHelpers()
 
 const columns = [
 {
@@ -77,7 +81,13 @@ const columns = [
 { style: 'white-space: normal;', name: 'quantity', label: 'Cantidad', field: 'quantity', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'year_publication', label: 'Año de publicación', field: 'year_publication', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'page_number', label: 'N. de paginas', field: 'page_number', sortable: true, align: 'left' },
-{ style: 'white-space: normal;', name: 'description', label: 'Descripción', field: 'description', sortable: true, align: 'left' },
+{
+	style: 'white-space: normal;',
+	name: 'description', label: 'Descripción',
+	field: row => maxText(row.description, 100),
+	format: val => `${val}`,
+	sortable: true, align: 'left'
+},
 { name: 'image', label: 'Imagen', field: '', align: 'center' },
 { 
 	name: 'swith', 
@@ -151,6 +161,7 @@ const changeSwith = (row) => {
 				return item
 			})
 			dataTablePinia.setBooks(books)
+			loanPinia.setBooks([])
 		}
 	}).finally(() => {
 		loadingSwith.value = false
@@ -167,6 +178,7 @@ const deleteRow = (row) => {
 		if(response.status >= 200 && response.status < 300) {
 			let data = dataTablePinia.books.filter((item) => item.id != row.id)
 			dataTablePinia.setBooks(data)
+			loanPinia.setBooks([])
 		}
 	})
 }

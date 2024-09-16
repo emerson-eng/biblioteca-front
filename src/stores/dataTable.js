@@ -6,7 +6,7 @@ export const useDataTableStore = defineStore('dataTable', {
 		loans: [],
 		//Students
 		students: [],
-		typePersons: [],
+		typeStudents: [],
 		//Books
 		books: [],
 		//User
@@ -27,8 +27,8 @@ export const useDataTableStore = defineStore('dataTable', {
 		setStudents(val) {
 			this.students = val
 		},
-		setTypePersons(val) {
-			this.typePersons = val
+		setTypeStudents(val) {
+			this.typeStudents = val
 		},
 
 		setBooks(val) {

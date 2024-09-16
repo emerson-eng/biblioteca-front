@@ -37,9 +37,11 @@
 <script setup>
 import { ref, inject } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import useHttpService from 'utils/httpService'
 
 const dataTablePinia = useDataTableStore()
+const loanPinia = useLoanStore()
 const { post, put } =  useHttpService()
 
 const props = defineProps({
@@ -74,6 +76,7 @@ const methodForm = () => {
 		update()
 	else
 		register()
+	loanPinia.setEditorials([])
 }
 
 const register = () => {

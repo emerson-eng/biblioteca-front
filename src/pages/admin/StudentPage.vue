@@ -44,8 +44,8 @@ const columns = [
 },
 {
 	style: 'white-space: normal;',
-	name: 'type_people', label: 'Tipo',
-	field: row => row.type_people.name,
+	name: 'type_student', label: 'Tipo',
+	field: row => row.type_student.name,
 	format: val => `${val}`,
 	sortable: true, align: 'left'
 },
