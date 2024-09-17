@@ -86,6 +86,14 @@
 		</q-btn>
 	</template>
 
+	<template v-slot:body-cell-stateLoan="props">
+		<q-td :props="props">
+			<q-badge v-if="props.row.state == 2" color="red" label="Devolución vencida" />
+			<q-badge v-else-if="props.row.state == 1" color="green-14" label="Devuelto" />
+			<q-badge v-else color="blue-grey-4" label="Prestado" />
+		</q-td>
+	</template>
+
 	<template v-slot:body-cell-swith="props">
 		<q-td :props="props">
 			<q-toggle 
@@ -103,7 +111,8 @@
 				<q-tooltip>
 					{{ zoomImageTitle }}
 				</q-tooltip>
-				<q-img :src="urlImg + props.row.image" spinner-color="primary" width="40px" height="40px" />
+				<q-img v-if="props.row.image" :src="urlImg + props.row.image" spinner-color="primary" width="40px" height="40px" />
+				<q-img v-else src="/images/11-Libro.jpg" spinner-color="primary" width="40px" height="40px" />
 			</q-btn>
 		</q-td>
 	</template>

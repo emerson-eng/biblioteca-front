@@ -2,6 +2,7 @@
 	<div>
 		<q-select
 		v-model="bookSelected"
+		:disable="disable"
 		use-input
 		label="Libro"
 		hide-selected
@@ -39,6 +40,10 @@ const props = defineProps({
 		default: true,
 	},
 	useAll: {
+		type: Boolean,
+		default: false,
+	},
+	disable: {
 		type: Boolean,
 		default: false,
 	},

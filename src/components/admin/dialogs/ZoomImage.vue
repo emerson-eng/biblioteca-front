@@ -9,8 +9,13 @@
 			</q-card-section>
 
 			<q-card-section>
-				<q-img
+				<q-img v-if="image"
 				:src="urlImg + image"
+				spinner-color="primary"
+				width="100%"
+				/>
+				<q-img v-else
+				src="/images/11-Libro.jpg"
 				spinner-color="primary"
 				width="100%"
 				/>

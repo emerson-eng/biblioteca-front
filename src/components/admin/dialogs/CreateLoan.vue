@@ -21,18 +21,27 @@
 							<div class="col-12 col-sm-9" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
 								<select-book
 								:useInject="true"
+								:disable="isUpdate"
+								@isSelected="isSelectedBook"
 								/>
 							</div>
 							<div class="col-12 col-sm-3" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
 								<q-input v-model="form.quantity" 
+								:disable="isUpdate"
 								type="number" label="Cantidad"
 								lazy-rules :rules="[ val => val && val > 0 || 'Ingrese la cantidad']"
+								style="padding-bottom: 10px!important;"
+								/>
+								<q-badge v-if="bookSelected && !isUpdate"
+								color="blue" 
+								:label="'Disponible: ' + quantityAvailable" 
 								/>
 							</div>
 						</div>
 
 						<select-student
 						:useInject="true"
+						:disable="isUpdate"
 						/>
 
 						<div class="row">
@@ -70,6 +79,7 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import { useUserStore } from 'stores/user'
 import useFormatDate from 'utils/formatDate'
 import useHttpService from 'utils/httpService'
@@ -78,6 +88,7 @@ import SelectStudent from 'components/admin/form/SelectStudent.vue'
 
 const dataTablePinia = useDataTableStore()
 const userPinia = useUserStore()
+const loanPinia = useLoanStore()
 const { post, put } =  useHttpService()
 const { formatCurrentDate } = useFormatDate()
 
@@ -99,6 +110,7 @@ const form = ref({
 	quantity: 1,
 	observation: '',
 })
+const quantityAvailable = ref([])
 const bookSelected = ref(null)
 const studentSelected = ref(null)
 
@@ -149,7 +161,15 @@ const register = () => {
 		if(response.status >= 200 && response.status < 300) {
 			let loans = [response.data.data, ...dataTablePinia.loans]
 			dataTablePinia.setLoans(loans)
+			dataTablePinia.setBooks([])
 			dialog.value = false
+
+			let books = loanPinia.books.map((item) => {
+				if(item.id == response.data.book.id)
+					item = response.data.book
+				return item
+			})
+			loanPinia.setBooks(books)
 		}
 	}).finally(() => {
 		loadingBtn.value = false
@@ -180,5 +200,10 @@ const setData = () => {
 	form.value.book_id = bookSelected.value.value
 	form.value.student_id = studentSelected.value.value
 	form.value.user_id = userPinia.user.id
+}
+
+const isSelectedBook = (val) => {
+	let book = loanPinia.books.find(item => item.id == val.value)
+	quantityAvailable.value = book.quantity
 }
 </script>
