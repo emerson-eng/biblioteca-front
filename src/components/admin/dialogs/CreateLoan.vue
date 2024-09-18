@@ -10,7 +10,7 @@
 		<q-dialog v-model="dialog" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate">
 			<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
 				<q-card-section class="row items-center q-pb-none">
-					<div class="text-h6 text-color-dark text-bold">Registrar prestamo</div>
+					<div class="text-h6 text-color-dark text-bold">Registrar préstamo</div>
 					<q-space />
 					<q-btn icon="close" flat round dense v-close-popup />
 				</q-card-section>
@@ -47,12 +47,14 @@
 						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
 								<q-input v-model="form.loan_date"
+								:disable="form.state == 1"
 								type="date" label="Fecha de préstamo"
 								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de préstamo']"
 								/>
 							</div>
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">
 								<q-input v-model="form.return_date"
+								:disable="form.state == 1"
 								type="date" label="Fecha de devolución"
 								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese la fecha de devolución']"
 								/>

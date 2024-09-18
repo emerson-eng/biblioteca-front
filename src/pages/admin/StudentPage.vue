@@ -18,6 +18,13 @@
 		:keyName="'id'"
 		@editRow="editRow"
 		@deleteRow="deleteRow"
+		:iconAdditionalColumn="'fa-solid fa-qrcode'"
+		:additionalColumnnTitle="'Generar código QR'"
+		@additionalColumn="openGenerateQr"
+		/>
+
+		<generate-qr 
+		:textQR="textQR" 
 		/>
 	</q-page>
 </template>
@@ -28,6 +35,7 @@ import { useDataTableStore } from 'stores/dataTable'
 import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateStudent from 'components/admin/dialogs/CreateStudent.vue'
+import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
 import useHttpService from 'utils/httpService'
 
 const $q = useQuasar()
@@ -55,6 +63,7 @@ const columns = [
 { style: 'white-space: normal;', name: 'address', label: 'Dirección', field: 'address', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'email', label: 'Correo electrónico', field: 'email', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'phone', label: 'Celular', field: 'phone', sortable: true, align: 'left' },
+{ name: 'additionalColumn', label: 'QR', field: '', align: 'center' },
 { name: 'actions', label: 'Acciones', field: '', align: 'center' },
 ]
 
@@ -63,8 +72,12 @@ const selectRow = ref({})
 const dialog = ref(false)
 const isUpdate = ref(false)
 
+const dialogGenerateQR = ref(false)
+const textQR = ref('')
+
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
+provide('dialogGenerateQR', dialogGenerateQR)
 
 const getData = () => {
 	loading.value = true
@@ -100,4 +113,8 @@ const deleteRow = (row) => {
 	})
 }
 
+const openGenerateQr = (row) => {
+	textQR.value = row.dni
+	dialogGenerateQR.value = true
+}
 </script>

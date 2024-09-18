@@ -23,10 +23,17 @@
 		:loadingSwith="loadingSwith"
 		@changeSwith="changeSwith"
 		@zoomImageEmit="zoomImageEmit"
+		:iconAdditionalColumn="'fa-solid fa-qrcode'"
+		:additionalColumnnTitle="'Generar código QR'"
+		@additionalColumn="openGenerateQr"
 		/>
 
 		<zoom-image 
 		:image="image"
+		/>
+
+		<generate-qr 
+		:textQR="textQR" 
 		/>
 	</q-page>
 </template>
@@ -39,6 +46,7 @@ import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateBook from 'components/admin/dialogs/CreateBook.vue'
 import ZoomImage from 'components/admin/dialogs/ZoomImage.vue'
+import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
 import useHttpService from 'utils/httpService'
 import useHelpers from 'utils/helpers'
 
@@ -97,9 +105,9 @@ const columns = [
 	sortable: true,
 	sort: (a, b) => parseInt(a, 10) - parseInt(b, 10), 
 },
+{ name: 'additionalColumn', label: 'QR', field: '', align: 'center' },
 { name: 'actions', label: 'Acciones', field: '', align: 'center' },
 ]
-
 
 const loading = ref(false)
 const selectRow = ref({})
@@ -112,10 +120,14 @@ const swithModels = ref([])
 const image = ref('')
 const dialogZoomImage = ref(false)
 
+const dialogGenerateQR = ref(false)
+const textQR = ref('')
+
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
 provide('swithModels', swithModels)
 provide('dialogZoomImage', dialogZoomImage)
+provide('dialogGenerateQR', dialogGenerateQR)
 
 const formatStateModels = (data) => {
 	swithModels.value = []
@@ -186,5 +198,10 @@ const deleteRow = (row) => {
 const zoomImageEmit = (row) => {
 	image.value = row.image
 	dialogZoomImage.value = true
+}
+
+const openGenerateQr = (row) => {
+	textQR.value = row.id+''
+	dialogGenerateQR.value = true
 }
 </script>

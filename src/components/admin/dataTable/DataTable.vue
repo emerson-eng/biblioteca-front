@@ -137,6 +137,16 @@
 		</q-td>
 	</template>
 
+	<template v-slot:body-cell-additionalColumnLoan="props">
+		<q-td :props="props">
+			<q-btn v-if="props.row.state != 1" dense round flat color="info" @click="additionalColumn(props.row)" :icon="iconAdditionalColumn">
+				<q-tooltip>
+					{{ additionalColumnnTitle }}
+				</q-tooltip>
+			</q-btn>
+		</q-td>
+	</template>
+
 	<template v-slot:body-cell-actions="props">
 		<q-td :props="props">
 			<q-btn v-if="btnEdit" dense round flat color="grey" @click="editRow(props.row)" icon="edit" aria-label="editar">

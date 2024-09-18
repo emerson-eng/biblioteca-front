@@ -52,6 +52,9 @@
 			:keyName="'id'"
 			@editRow="editRow"
 			:btnDelete="false"
+			:iconAdditionalColumn="'fa-solid fa-book'"
+			:additionalColumnnTitle="'Recibir libro'"
+			@additionalColumn="receiveBook"
 			/>
 		</q-card>
 	</q-page>
@@ -60,15 +63,19 @@
 <script setup>
 import { ref, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import useHttpService from 'utils/httpService'
 import useFormatDate from 'utils/formatDate'
 import CreateLoan from 'components/admin/dialogs/CreateLoan.vue'
 import SelectStudent from 'components/admin/form/SelectStudent.vue'
 import SelectBook from 'components/admin/form/SelectBook.vue'
+import { useQuasar } from 'quasar'
 
+const $q = useQuasar()
 const dataTablePinia = useDataTableStore()
-const { post } =  useHttpService()
+const loanPinia = useLoanStore()
+const { post, deleteApi } =  useHttpService()
 const { formatDate, formatCurrentDate } = useFormatDate()
 
 const columns = [
@@ -105,6 +112,7 @@ const columns = [
 { style: 'white-space: normal;', name: 'quantity', label: 'Cantidad', field: 'quantity', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'observation', label: 'Observación', field: 'observation', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'stateLoan', label: 'Estado', field: 'state', sortable: true, align: 'left' },
+{ name: 'additionalColumnLoan', label: 'Recibir', field: '', align: 'center' },
 { name: 'actions', label: 'Acciones', field: '', align: 'center' },
 ]
 
@@ -146,5 +154,49 @@ const editRow = (row) => {
 	selectRow.value = row
 	isUpdate.value = true
 	dialog.value = true
+}
+
+const receiveBook = (row) => {
+	$q.dialog({
+		title: 'Advertencia',
+		message: '¿Recibir libro?',
+		ok: {
+			color: 'primary',
+			label: 'Si, Recibir!',
+		},
+		cancel: {
+			flat: true,
+			label: 'Cancelar',
+		},
+		persistent: false,
+	}).onOk(() => {
+		deleteRow(row)
+	})
+}
+
+const deleteRow = (row) => {
+	const notif = $q.notify({
+		type: 'ongoing',
+		message: 'Realizando la operación ...',
+	})
+	const url = `admin/loan/${row.id}`
+	deleteApi(url, notif).then((response) => {
+		if(response.status >= 200 && response.status < 300) {
+			let loans = dataTablePinia.loans.map((item) => {
+				if(item.id == response.data.data.id)
+					item = response.data.data
+				return item
+			})
+			dataTablePinia.setLoans(loans)
+			dataTablePinia.setBooks([])
+
+			let books = loanPinia.books.map((item) => {
+				if(item.id == response.data.book.id)
+					item = response.data.book
+				return item
+			})
+			loanPinia.setBooks(books)
+		}
+	})
 }
 </script>
