@@ -40,7 +40,7 @@
 				</div>
 				<div class="col-12 col-sm-3 q-px-sm q-my-auto" :class="$q.screen.width < 600 ? 'q-pt-md' : ''">
 					<div class="text-h6 text-center text-primary text-weight-bold">
-						Total Libros: {{ total.toFixed(2) }}
+						Total Libros: {{ total }}
 					</div>
 				</div>
 			</div>
@@ -73,9 +73,10 @@ import SelectStudent from 'components/admin/form/SelectStudent.vue'
 import SelectBook from 'components/admin/form/SelectBook.vue'
 import SelectUser from 'components/admin/form/SelectUser.vue'
 import VueApexCharts from 'vue3-apexcharts'
+import moment from 'moment'
 
 const { post } =  useHttpService()
-const { formatDate, formatCurrentDate } = useFormatDate()
+const { formatDateTime } = useFormatDate()
 
 const columns = [
 {
@@ -88,33 +89,36 @@ const columns = [
 {
 	style: 'white-space: normal;',
 	name: 'created_at', label: 'Fecha',
-	field: row => row.created_at,
-	format: val => `${val}`,
-	sortable: true, align: 'left'
-},
-{ style: 'white-space: normal;', name: 'name', label: 'Nombre', field: 'name', sortable: true, align: 'left' },
-{
-	style: 'white-space: normal;',
-	name: 'dni', label: 'N. de doc.',
-	field: row => row.provider.dni,
+	field: row => formatDateTime(row.created_at),
 	format: val => `${val}`,
 	sortable: true, align: 'left'
 },
 {
 	style: 'white-space: normal;',
-	name: 'provider', label: 'Proveedor',
-	field: row => row.provider.document_type == 'RUC' ? row.provider.business_name : row.provider.name + ' ' + row.provider.last_name,
+	name: 'book', label: 'Libro',
+	field: row => row.book.name,
 	format: val => `${val}`,
 	sortable: true, align: 'left'
 },
 {
 	style: 'white-space: normal;',
-	name: 'total', label: 'Libros',
-	field: row => row.total.toFixed(2),
+	name: 'dni', label: 'DNI',
+	field: row => row.student.dni,
 	format: val => `${val}`,
 	sortable: true, align: 'left'
 },
-{ style: 'white-space: normal;', name: 'note', label: 'Observación', field: 'note', sortable: true, align: 'left' },
+{
+	style: 'white-space: normal;',
+	name: 'student', label: 'Estudiante',
+	field: row => row.student.name +' '+ row.student.last_name,
+	format: val => `${val}`,
+	sortable: true, align: 'left'
+},
+{ style: 'white-space: normal;', name: 'loan_date', label: 'F. de préstamo', field: 'loan_date', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'return_date', label: 'F. de devolución', field: 'return_date', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'quantity', label: 'Cantidad', field: 'quantity', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'observation', label: 'Observación', field: 'observation', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'stateLoan', label: 'Estado', field: 'state', sortable: true, align: 'left' },
 {
 	style: 'white-space: normal;',
 	name: 'user', label: 'Usuario',
@@ -125,12 +129,21 @@ const columns = [
 ]
 
 const form = ref({
-	start: formatCurrentDate(),
-	end: formatCurrentDate(),
+	start: moment().startOf('month').format('YYYY-MM-DD'),
+	end: moment().endOf('month').format('YYYY-MM-DD'),
 })
 const chart = ref({
-	chartOptions: {},
-	series: []
+	chartOptions: {
+		chart: {
+			id: 'Libros',
+			toolbar: { show: false }
+		},
+		xaxis: { categories: [] }
+	},
+	series: [{
+		data: [],
+		name: 'Libros'
+	}]
 })
 const reports = ref([])
 const total = ref(0)
@@ -147,32 +160,31 @@ provide('userSelected', userSelected)
 const formatReport = (data) => {
 	total.value = 0
 	for(let i = 0; i < data.length; i++) {
-		total.value += data[i].total
-		data[i].created_at = formatDate(data[i].created_at)
+		total.value += data[i].quantity
 	}
 	reports.value = data
 
 	const grouped = {}
 	data.forEach(obj => {
-		const date = obj.created_at
-		if (grouped[date]) 
-			grouped[date] += obj.total
+		const book = obj.book.name
+		if (grouped[book]) 
+			grouped[book] += obj.quantity
 		else 
-			grouped[date] = obj.total
+			grouped[book] = obj.quantity
 	})
 
-	const dates = Object.keys(grouped)
+	const books = Object.keys(grouped)
 	chart.value.chartOptions = {
 		chart: {
 			id: 'Libros',
 			toolbar: { show: false }
 		},
 		xaxis: { 
-			categories: dates
+			categories: books
 		}
 	} 
 	chart.value.series = [{
-		data: dates.map(date => grouped[date]),
+		data: books.map(book => grouped[book]),
 		name: 'Libros'
 	}]
 }
@@ -182,8 +194,8 @@ const getData = () => {
 	form.value.student_id = studentSelected.value ? studentSelected.value.value : 0
 	form.value.book_id = bookSelected.value ? bookSelected.value.value : 0
 	form.value.user_id = userSelected.value ? userSelected.value.value : 0
-	post('admin/report-expenses', form.value, false).then((response) => {
-		console.log('report-expenses', response)
+	post('admin/loan/report', form.value, false).then((response) => {
+		console.log('loan/report', response)
 		if(response.status >= 200 && response.status < 300) {
 			formatReport(response.data.data)
 		}

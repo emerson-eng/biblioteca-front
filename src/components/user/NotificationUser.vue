@@ -8,26 +8,29 @@
 		<q-menu auto-close :offset="[110, 0]">
 			<q-list :style="$q.screen.width < 700 ? '' : 'width: 320px'">
 				<q-item-label header>Notificaciones</q-item-label>
-				<q-item v-for="notification in notifications" :key="notification.id" clickable>
-					<q-item-section>
-						<q-item-label class="text-bold q-pb-sm">{{ notification.title }}</q-item-label>
-						<q-item-label>
-							<span v-html="notification.description"></span>
-						</q-item-label>
-						<div class="q-mt-xs">
-							<span class="text-caption">
-								{{ formatDateFromNow(notification.created_at) }}
-							</span>
-							<span class="q-pl-md">
-								<q-badge
-								v-if="notification.stateAux === 0"
-								rounded
-								color="blue"
-								/>
-							</span>
-						</div>
-					</q-item-section>
-				</q-item>
+				<span v-for="notification in notifications" :key="notification.id">
+					<q-item :clickable="notification.link ? true : false" :to="notification.link ? notification.link : ''">
+						<q-item-section>
+							<q-item-label class="text-bold q-pb-sm">{{ notification.title }}</q-item-label>
+							<q-item-label>
+								<span v-html="notification.description"></span>
+							</q-item-label>
+							<div class="q-mt-xs">
+								<span class="text-caption">
+									{{ formatDateFromNow(notification.created_at) }}
+								</span>
+								<span class="q-pl-md">
+									<q-badge
+									v-if="notification.stateAux === 0"
+									rounded
+									color="blue"
+									/>
+								</span>
+							</div>
+						</q-item-section>
+					</q-item>
+					<q-separator class="q-my-xs" />
+				</span>
 
 				<q-item v-if="notifications.length === 0">
 					<q-item-section>

@@ -76,15 +76,22 @@ const $q = useQuasar()
 const dataTablePinia = useDataTableStore()
 const loanPinia = useLoanStore()
 const { post, deleteApi } =  useHttpService()
-const { formatDate, formatCurrentDate } = useFormatDate()
+const { formatDateTime, formatCurrentDate } = useFormatDate()
 
-const columns = [
+var columns = [
 {
 	name: 'row-number',
 	required: true,
 	label: '#',
 	align: 'left',
 	sortable: false,
+},
+{
+	style: 'white-space: normal;',
+	name: 'created_at', label: 'Fecha',
+	field: row => formatDateTime(row.created_at),
+	format: val => `${val}`,
+	sortable: true, align: 'left'
 },
 {
 	style: 'white-space: normal;',
@@ -107,8 +114,8 @@ const columns = [
 	format: val => `${val}`,
 	sortable: true, align: 'left'
 },
-{ style: 'white-space: normal;', name: 'loan_date', label: 'Fecha de préstamo', field: 'loan_date', sortable: true, align: 'left' },
-{ style: 'white-space: normal;', name: 'return_date', label: 'Fecha de devolución', field: 'return_date', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'loan_date', label: 'F. de préstamo', field: 'loan_date', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'return_date', label: 'F. de devolución', field: 'return_date', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'quantity', label: 'Cantidad', field: 'quantity', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'observation', label: 'Observación', field: 'observation', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'stateLoan', label: 'Estado', field: 'state', sortable: true, align: 'left' },
@@ -133,6 +140,14 @@ provide('dialog', dialog)
 provide('isUpdate', isUpdate)
 provide('studentSelected', studentSelected)
 provide('bookSelected', bookSelected)
+
+const init = (cols) =>  {
+	const centerColumns = cols.filter(col => col.align === 'center')
+	const otherColumns = cols.filter(col => col.align !== 'center')
+	columns = [otherColumns[0], ...centerColumns, ...otherColumns.slice(1)]
+}
+if($q.screen.width < 800)
+	init(columns)
 
 const getData = () => {
 	loading.value = true

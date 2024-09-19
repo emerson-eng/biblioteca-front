@@ -32,7 +32,7 @@ export default function () {
 	}
 
 	const formatDateTime = (timeStamp) => {
-		return date.formatDate(timeStamp, 'D MMM YYYY HH:mm')
+		return date.formatDate(timeStamp, 'D MMM YYYY hh:mm a')
 	}
 
 	const getCurrentYear = () => {

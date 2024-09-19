@@ -21,12 +21,12 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
     boot: [
-      'axios',
+    'axios',
     ],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: [
-      'app.scss'
+    'app.scss'
     ],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -41,7 +41,7 @@ module.exports = configure(function (ctx) {
 
       'roboto-font', // optional, you are not bound to it
       'material-icons', // optional, you are not bound to it
-    ],
+      ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
@@ -83,11 +83,11 @@ module.exports = configure(function (ctx) {
       // viteVuePluginOptions: {},
 
       vitePlugins: [
-        ['vite-plugin-checker', {
-          eslint: {
-            lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"'
-          }
-        }, { server: false }]
+      ['vite-plugin-checker', {
+        eslint: {
+          lintCommand: 'eslint "./**/*.{js,mjs,cjs,vue}"'
+        }
+      }, { server: false }]
       ]
     },
 
@@ -117,6 +117,7 @@ module.exports = configure(function (ctx) {
       'Dialog',
       'LocalStorage',
       'SessionStorage',
+      'Loading',
       ]
     },
 
@@ -152,10 +153,10 @@ module.exports = configure(function (ctx) {
       prodPort: 3000, // The default port that the production server should use
                       // (gets superseded if process.env.PORT is specified at runtime)
 
-      middlewares: [
+                      middlewares: [
         'render' // keep this as last one
-      ]
-    },
+        ]
+      },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
     pwa: {
@@ -214,7 +215,7 @@ module.exports = configure(function (ctx) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {
       contentScripts: [
-        'my-content-script'
+      'my-content-script'
       ],
 
       // extendBexScriptsConf (esbuildConf) {}

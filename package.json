@@ -13,6 +13,11 @@
     "build": "quasar build"
   },
   "dependencies": {
+    "@fullcalendar/core": "^6.1.15",
+    "@fullcalendar/daygrid": "^6.1.15",
+    "@fullcalendar/interaction": "^6.1.15",
+    "@fullcalendar/timegrid": "^6.1.15",
+    "@fullcalendar/vue3": "^6.1.15",
     "@quasar/extras": "^1.16.4",
     "apexcharts": "^3.53.0",
     "axios": "^1.2.1",
