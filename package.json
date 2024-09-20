@@ -2,7 +2,7 @@
   "name": "biblioteca-front",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "Quasar App",
+  "productName": "IE Concertada Solaris - Andahuaylas",
   "author": "Yefer Espinoza <espinozayefer96@gmail.com>",
   "private": true,
   "scripts": {
@@ -10,7 +10,8 @@
     "format": "prettier --write \"**/*.{js,vue,scss,html,md,json}\" --ignore-path .gitignore",
     "test": "echo \"No test specified\" && exit 0",
     "dev": "quasar dev",
-    "build": "quasar build"
+    "build": "quasar build",
+    "icons": "icongenie generate -i src/assets/logo/logo-phone.png --skip-trim"
   },
   "dependencies": {
     "@fullcalendar/core": "^6.1.15",
@@ -19,6 +20,7 @@
     "@fullcalendar/timegrid": "^6.1.15",
     "@fullcalendar/vue3": "^6.1.15",
     "@quasar/extras": "^1.16.4",
+    "@quasar/icongenie": "^4.0.0",
     "apexcharts": "^3.53.0",
     "axios": "^1.2.1",
     "jspdf": "^2.5.1",
