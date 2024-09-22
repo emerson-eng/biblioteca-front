@@ -48,11 +48,11 @@ let adminRoutes = [
 	}
 },
 { 
-	path: 'configuracion/materias', name: 'MattersPage',
+	path: 'configuracion/estantes', name: 'MattersPage',
 	beforeEnter: auth,
 	component: () => import('pages/admin/setting/MattersPage.vue'),
 	meta: {
-		permissions: ['Configuración/Materias']
+		permissions: ['Configuración/Estantes']
 	}
 },
 { 

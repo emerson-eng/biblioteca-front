@@ -12,6 +12,8 @@
 
 		<data-table
 		exportName="Estudiantes" :keyTable="'students'"
+		:showBtnImport="true"
+		@btnImport="btnImport"
 		:loading="loading"
 		:columns="columns"
 		:rows="dataTablePinia.students"
@@ -23,6 +25,7 @@
 		@additionalColumn="openGenerateQr"
 		/>
 
+		<import-student />
 		<generate-qr 
 		:textQR="textQR" 
 		/>
@@ -36,6 +39,7 @@ import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateStudent from 'components/admin/dialogs/CreateStudent.vue'
 import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
+import ImportStudent from 'components/admin/import/ImportStudent.vue'
 import useHttpService from 'utils/httpService'
 
 const $q = useQuasar()
@@ -72,11 +76,14 @@ const selectRow = ref({})
 const dialog = ref(false)
 const isUpdate = ref(false)
 
+const dialogImport = ref(false)
+
 const dialogGenerateQR = ref(false)
 const textQR = ref('')
 
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
+provide('dialogImport', dialogImport)
 provide('dialogGenerateQR', dialogGenerateQR)
 
 const getData = () => {
@@ -116,5 +123,9 @@ const deleteRow = (row) => {
 const openGenerateQr = (row) => {
 	textQR.value = row.dni
 	dialogGenerateQR.value = true
+}
+
+const btnImport = () => {
+	dialogImport.value = true
 }
 </script>

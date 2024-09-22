@@ -65,7 +65,7 @@
 
 						<q-input v-model="form.phone" 
 						type="number" label="Número de celular"
-						lazy-rules :rules="[ val => val && val > 0 || 'Ingrese el número de celular']"
+						hint="Opcional"
 						/>
 
 						<q-btn rounded :loading="loadingBtn" :disable="loadingBtn" color="primary" type="submit" icon="save" :label="isUpdate ? 'Actualizar' : 'Registrar'" class="q-mt-md">

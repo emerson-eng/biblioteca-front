@@ -10,7 +10,7 @@
 		<q-dialog v-model="dialog" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate">
 			<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
 				<q-card-section class="row items-center q-pb-none">
-					<div class="text-h6 text-color-dark text-bold">Registrar materia</div>
+					<div class="text-h6 text-color-dark text-bold">Registrar estante</div>
 					<q-space />
 					<q-btn icon="close" flat round dense v-close-popup />
 				</q-card-section>

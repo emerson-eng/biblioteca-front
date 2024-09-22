@@ -33,6 +33,18 @@
 	</template>
 
 	<template v-slot:top-right>
+		<div v-if="showBtnImport">
+			<q-btn
+			v-if="$q.screen.width < 800 ? false : true"
+			color="primary"
+			icon="unarchive"
+			label="Importar Excel"
+			no-caps
+			@click="btnImport"
+			class="q-mr-md"
+			/>
+		</div>
+
 		<q-btn-dropdown v-if="showBtnExport && $q.screen.width > 700" no-caps color="primary" label="Exportar" icon="archive">
 			<q-list>
 				<q-item clickable v-close-popup @click="ExportToPDF(columns, rows, exportName)">
@@ -210,6 +222,10 @@ const props = defineProps({
 		type: Boolean,
 		default: () => true
 	},
+	showBtnImport: {
+		type: Boolean,
+		default: () => false
+	},
 	loading: {
 		type: Boolean,
 		default: () => false
@@ -295,6 +311,7 @@ const emit = defineEmits([
 	'deleteRow',
 	'changeSwith',
 	'zoomImageEmit',
+	'btnImport',
 	'additionalColumn',
 	'additionalColumn2',
 	])
@@ -343,6 +360,10 @@ const editRow = (row) => {
 
 const changeSwith = (row) => {
 	emit('changeSwith', row)
+}
+
+const btnImport = () => {
+	emit('btnImport')
 }
 
 const additionalColumn = (row) =>{

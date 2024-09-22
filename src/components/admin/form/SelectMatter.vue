@@ -3,7 +3,7 @@
 		<q-select
 		v-model="matterSelected"
 		use-input
-		label="Materia"
+		label="Estante"
 		hide-selected
 		fill-input
 		input-debounce="0"
@@ -103,7 +103,7 @@ const filterFn = (val, update, abort) => {
 
 const getRules = () => {
 	if(props.useRules)
-		return [ val => val && val.label.length > 0 || 'Seleccione una materia']
+		return [ val => val && val.label.length > 0 || 'Seleccione un estante']
 	return []
 }
 </script>

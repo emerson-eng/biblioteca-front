@@ -137,11 +137,11 @@ const getTitleEvent = (state, val) => {
 
 const getState = (state) => {
 	if(state == 2)
-		return { name: 'Devolución vencida', color: 'red'}
+		return { name: 'Devolución vencida', color: '#f44336'}
 	if(state == 1)
-		return { name: 'Devuelto', color: 'green-14'}
+		return { name: 'Devuelto', color: '#00c853'}
 	else 
-		return { name: 'Prestado', color: 'blue-grey-4'}
+		return { name: 'Prestado', color: '#90a4ae'}
 }
 
 const formatData = (val) => {

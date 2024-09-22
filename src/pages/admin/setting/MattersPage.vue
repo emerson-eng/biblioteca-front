@@ -3,7 +3,7 @@
 		<h5 class="q-mt-none q-mb-md row justify-between">
 			<div>
 				<q-icon name="fa-solid fa-indent" size="sm" />
-				Materias
+				Estantes
 			</div>
 			<create-matter
 			:selectRow="selectRow" 
@@ -11,7 +11,7 @@
 		</h5>
 
 		<data-table
-		exportName="Materias" :keyTable="'matters'"
+		exportName="Estantes" :keyTable="'matters'"
 		:loading="loading"
 		:columns="columns"
 		:rows="dataTablePinia.matters"

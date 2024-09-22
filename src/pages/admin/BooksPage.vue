@@ -67,7 +67,7 @@ const columns = [
 { style: 'white-space: normal;', name: 'name', label: 'Nombre', field: 'name', sortable: true, align: 'left' },
 {
 	style: 'white-space: normal;',
-	name: 'matter', label: 'Materia',
+	name: 'matter', label: 'Estante',
 	field: row => row.matter.name,
 	format: val => `${val}`,
 	sortable: true, align: 'left'

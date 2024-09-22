@@ -24,8 +24,8 @@ export const permissions = [
 	value: 'Configuración/Institución',
 },
 {
-	label: 'Configuración/Materias',
-	value: 'Configuración/Materias',
+	label: 'Configuración/Estantes',
+	value: 'Configuración/Estantes',
 },
 {
 	label: 'Configuración/Autores',
