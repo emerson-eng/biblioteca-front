@@ -49,7 +49,6 @@ const emit = defineEmits(['isSelected'])
 const loanPinia = useLoanStore()
 const { get } = userHttpService()
 
-
 const authorSelected = props.useInject ? inject('authorSelected') : ref(null)
 const authors = ref([])
 const optionsData = ref([])

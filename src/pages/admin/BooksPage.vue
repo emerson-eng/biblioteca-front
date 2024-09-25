@@ -12,6 +12,8 @@
 
 		<data-table
 		exportName="Libros" :keyTable="'books'"
+		:showBtnImport="true"
+		@btnImport="btnImport"
 		:loading="loading"
 		:columns="columns"
 		:rows="dataTablePinia.books"
@@ -28,10 +30,10 @@
 		@additionalColumn="openGenerateQr"
 		/>
 
+		<import-book />
 		<zoom-image 
 		:image="image"
 		/>
-
 		<generate-qr 
 		:textQR="textQR" 
 		/>
@@ -47,6 +49,7 @@ import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateBook from 'components/admin/dialogs/CreateBook.vue'
 import ZoomImage from 'components/admin/dialogs/ZoomImage.vue'
 import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
+import ImportBook from 'components/admin/import/ImportBook.vue'
 import useHttpService from 'utils/httpService'
 import useHelpers from 'utils/helpers'
 
@@ -120,12 +123,15 @@ const swithModels = ref([])
 const image = ref('')
 const dialogZoomImage = ref(false)
 
+const dialogImport = ref(false)
+
 const dialogGenerateQR = ref(false)
 const textQR = ref('')
 
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
 provide('swithModels', swithModels)
+provide('dialogImport', dialogImport)
 provide('dialogZoomImage', dialogZoomImage)
 provide('dialogGenerateQR', dialogGenerateQR)
 
@@ -203,5 +209,13 @@ const zoomImageEmit = (row) => {
 const openGenerateQr = (row) => {
 	textQR.value = row.id+''
 	dialogGenerateQR.value = true
+}
+
+const btnImport = () => {
+	dialog.value = true
+	setTimeout(() => {
+		dialog.value = false
+	}, 100)
+	dialogImport.value = true
 }
 </script>

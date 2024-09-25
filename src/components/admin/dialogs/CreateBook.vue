@@ -42,9 +42,9 @@
 							</div>
 							<div class="col-12 col-sm-4" :class="$q.screen.width < 600 ? '' : 'q-px-sm'">
 								<q-input v-model="form.year_publication" 
-								type="date"
+								type="number"
 								label="Año de publicación"
-								lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese el año de publicación']"
+								lazy-rules :rules="[ val => val && val > 0 || 'Ingrese el año de publicación']"
 								/>
 							</div>
 							<div class="col-12 col-sm-4" :class="$q.screen.width < 600 ? '' : 'q-pl-sm'">

@@ -1,6 +1,6 @@
 <template>
 	<q-dialog v-model="dialogImport" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate" @hide="closeDialog">
-		<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
+		<q-card style="width: 850px; max-width: 850px" class="q-px-sm">
 			<q-card-section class="row items-center q-pb-none">
 				<div class="text-h6 text-color-dark text-bold">Importar Excel</div>
 				<q-space />
@@ -13,7 +13,7 @@
 						Ejemplo de la estructura del Excel
 					</div>
 					<q-img 
-					src="/images/import/students.jpg"
+					src="/images/import/book.jpg"
 					spinner-color="primary" 
 					/>
 				</div>
@@ -28,7 +28,7 @@
 							</q-item-section>
 							<q-item-section>
 								<div>
-									<span class="text-subtitle1 q-pr-sm">{{ respondeData.rows }}</span> Estudiantes registrados con éxito
+									<span class="text-subtitle1 q-pr-sm">{{ respondeData.rows }}</span> Libros registrados con éxito
 								</div>
 							</q-item-section>
 						</q-item>
@@ -39,14 +39,14 @@
 								</q-item-section>
 								<q-item-section>
 									<div>
-										<span class="text-subtitle1 q-pr-sm">{{ respondeData.rowDuplicates.length }}</span> Estudiantes ya registrados en el sistema
+										<span class="text-subtitle1 q-pr-sm">{{ respondeData.rowDuplicates.length }}</span> Libros ya registrados en el sistema
 									</div>
 								</q-item-section>
 							</template>
 							<q-card>
 								<q-card-section class="q-pt-none">
 									<ul v-for="(item, index) in  respondeData.rowDuplicates" :key="index">
-										<li>{{ item.dni + ': ' + item.name + ', ' + item.last_name }}</li>
+										<li>{{ item.name }}</li>
 									</ul>
 								</q-card-section>
 							</q-card>
@@ -70,10 +70,12 @@
 
 <script setup>
 import { ref, inject } from 'vue'
+import { useLoanStore } from 'stores/loan'
 import readXlsxFile from 'read-excel-file'
 import useHttpService from 'utils/httpService'
 import useAlerts from 'utils/alerts'
 
+const loanPinia = useLoanStore()
 const { post } =  useHttpService()
 const { alertNotify } = useAlerts()
 
@@ -91,7 +93,7 @@ const initUpdate = () => {
 
 const register = (form) => {
 	loadingImport.value = true
-	post('admin/student-import', form).then(response => {
+	post('admin/book-import', form).then(response => {
 		console.log('register', response)
 		if(response.status >= 200 && response.status < 300) {
 			respondeData.value.rows = form.rows.length - response.data.rowDuplicates.length
@@ -122,12 +124,14 @@ const importExcel = () => {
 				for(let i = 0; i < rows.length; i++) {
 					if(i > 0) {
 						vals.push({
-							dni: rows[i][0],
-							name: rows[i][1],
-							last_name: rows[i][2],
-							address: rows[i][3],
-							email: rows[i][4],
-							phone: rows[i][5],
+							matter_id: findMatter(rows[i][0]),
+							author_id: findAuthor(rows[i][1]),
+							editorial_id: findEditorial(rows[i][2]),
+							name: rows[i][3],
+							quantity: rows[i][4],
+							year_publication: rows[i][5],
+							page_number: rows[i][6],
+							description: rows[i][7],
 						})
 					}
 				}
@@ -139,6 +143,21 @@ const importExcel = () => {
 	catch {
 		alertNotify('El Excel a importar no se encuentra en un formato adecuado.', 'warning')
 	}
+}
+
+const findMatter = (val) => {
+	let data = loanPinia.matters.find((item) => item.name.toLowerCase() == val.toLowerCase())
+	return data ? data.id : 1
+}
+
+const findAuthor = (val) => {
+	let data = loanPinia.authors.find((item) => item.name.toLowerCase() == val.toLowerCase())
+	return data ? data.id : 1
+}
+
+const findEditorial = (val) => {
+	let data = loanPinia.editorials.find((item) => item.name.toLowerCase() == val.toLowerCase())
+	return data ? data.id : 1
 }
 
 </script>
