@@ -16,6 +16,7 @@
 				</q-card-section>
 
 				<q-card-section>
+					<QrScanner />
 					<q-form @submit="methodForm" class="column q-pb-md">
 						<div class="row">
 							<div class="col-12 col-sm-9" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
@@ -87,6 +88,7 @@ import useFormatDate from 'utils/formatDate'
 import useHttpService from 'utils/httpService'
 import SelectBook from 'components/admin/form/SelectBook.vue'
 import SelectStudent from 'components/admin/form/SelectStudent.vue'
+import QrScanner from 'components/admin/scanqr/QrScanner.vue'
 
 const dataTablePinia = useDataTableStore()
 const userPinia = useUserStore()
