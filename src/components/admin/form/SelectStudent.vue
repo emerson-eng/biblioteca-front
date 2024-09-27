@@ -78,7 +78,7 @@ const formatData = (data) => {
 	optionsData.value = newData
 }
 
-const getData= () => {
+const getData = () => {
 	get('admin/student', false).then((response) => {
 		console.log('student', response)
 		if(response.status >= 200 && response.status < 300) {

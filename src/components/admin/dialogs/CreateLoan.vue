@@ -7,7 +7,7 @@
 		@click="openDialog"
 		/>
 
-		<q-dialog v-model="dialog" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate">
+		<q-dialog v-model="dialog" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate" @before-show="initQR">
 			<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
 				<q-card-section class="row items-center q-pb-none">
 					<div class="text-h6 text-color-dark text-bold">Registrar préstamo</div>
@@ -15,8 +15,26 @@
 					<q-btn icon="close" flat round dense v-close-popup />
 				</q-card-section>
 
-				<q-card-section>
-					<QrScanner />
+				<q-card-section class="q-pt-sm">
+					<div v-if="!isUpdate" class="row">
+						<div>
+							<q-btn no-caps
+							color="primary"
+							:label="showQrScanner ? 'Apagar' : 'Escanear QR'"
+							icon="fa-solid fa-camera"
+							@click="showQrScanner = !showQrScanner"
+							/>
+						</div>
+						<div class="q-pl-sm">
+							<q-radio v-model="qrType" val="book" label="Libro" />
+							<q-radio v-model="qrType" val="student" label="Estudiante" />
+						</div>
+					</div>
+					<QrScanner v-if="showQrScanner"
+					class="q-mb-sm"
+					@resultQR="resultQR"
+					/>
+
 					<q-form @submit="methodForm" class="column q-pb-md">
 						<div class="row">
 							<div class="col-12 col-sm-9" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
@@ -89,12 +107,14 @@ import useHttpService from 'utils/httpService'
 import SelectBook from 'components/admin/form/SelectBook.vue'
 import SelectStudent from 'components/admin/form/SelectStudent.vue'
 import QrScanner from 'components/admin/scanqr/QrScanner.vue'
+import useAlerts from 'utils/alerts'
 
 const dataTablePinia = useDataTableStore()
 const userPinia = useUserStore()
 const loanPinia = useLoanStore()
 const { post, put } =  useHttpService()
 const { formatCurrentDate } = useFormatDate()
+const { alertNotifyQR } = useAlerts()
 
 const props = defineProps({
 	selectRow: {
@@ -117,6 +137,9 @@ const form = ref({
 const quantityAvailable = ref([])
 const bookSelected = ref(null)
 const studentSelected = ref(null)
+
+const showQrScanner = ref(false)
+const qrType = ref('book')
 
 provide('bookSelected', bookSelected)
 provide('studentSelected', studentSelected)
@@ -209,5 +232,38 @@ const setData = () => {
 const isSelectedBook = (val) => {
 	let book = loanPinia.books.find(item => item.id == val.value)
 	quantityAvailable.value = book.quantity
+}
+
+const initQR = () => {
+	qrType.value = 'book'
+	showQrScanner.value = false
+}
+const resultQR = (val) => {
+	console.log('QR', val)
+	if(qrType.value == 'book') {
+		let item = loanPinia.books.find(item => item.id == val)
+		if(item) {
+			alertNotifyQR('Libro encontrado.', 'positive')
+			bookSelected.value = {
+				label: item.name,
+				value: item.id,
+			}
+			qrType.value = 'student'
+		}
+		else 
+			alertNotifyQR('No se encontró el libro escaneado.', 'warning')
+	}
+	else {
+		let item = dataTablePinia.students.find(item => item.dni == val)
+		if(item) {
+			alertNotifyQR('Estudiante encontrado.', 'positive', 'center')
+			bookSelected.value = {
+				label: item.name,
+				value: item.id,
+			}
+		}
+		else 
+			alertNotifyQR('No se encontró el estudiante escaneado.', 'warning')
+	}
 }
 </script>
