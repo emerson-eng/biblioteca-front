@@ -38,9 +38,9 @@
 import { ref } from 'vue'
 import { QrcodeStream } from 'vue-qrcode-reader'
 
-const emit = defineEmits(['editRow'])
+const emit = defineEmits(['resultQR'])
 
-const error = ref('resultQR')
+const error = ref('')
 
 function onDetect(detectedCodes) {
 	emit('resultQR', JSON.stringify(detectedCodes.map(code => code.rawValue)))
