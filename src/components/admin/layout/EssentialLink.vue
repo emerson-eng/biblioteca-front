@@ -35,7 +35,7 @@
 			<q-item-section>Reportes</q-item-section>
 		</q-item>
 
-		<q-expansion-item v-if="canany(['Configuración/Institución', 'Configuración/Estantes', 'Configuración/Autores', 'Configuración/Editoriales'])" :model-value="isExpansionItem(['InstitutionPage', 'MattersPage', 'AuthorsPage', 'EditorialsPage'])" :content-inset-level="0.5" expand-separator @click="miniState = false">
+		<q-expansion-item v-if="canany(['Configuración/Institución', 'Configuración/Estantes', 'Configuración/Autores', 'Configuración/Editoriales'])" :model-value="isExpansionItem(['InstitutionPage', 'MattersPage', 'AuthorsPage', 'EditorialsPage', 'DegreesPage', 'SectionsPage'])" :content-inset-level="0.5" expand-separator @click="miniState = false">
 			<template v-slot:header>
 				<q-item-section avatar>
 					<q-avatar>
@@ -51,6 +51,7 @@
 				</q-item-section>
 				<q-item-section>Institución</q-item-section>
 			</q-item>
+			<q-separator class="q-ml-sm" />
 			<q-item v-if="can('Configuración/Estantes')" clickable v-ripple :to="{ name: 'MattersPage' }" active-class="text-primary">
 				<q-item-section avatar>
 					<q-icon name="fa-solid fa-tags" size="28px"/>
@@ -68,6 +69,19 @@
 					<q-icon name="fa-solid fa-newspaper" size="28px"/>
 				</q-item-section>
 				<q-item-section>Editoriales</q-item-section>
+			</q-item>
+			<q-separator class="q-ml-sm" />
+			<q-item v-if="can('Configuración/Grados')" clickable v-ripple :to="{ name: 'DegreesPage' }" active-class="text-primary">
+				<q-item-section avatar>
+					<q-icon name="fa-solid fa-graduation-cap" size="28px"/>
+				</q-item-section>
+				<q-item-section>Grados</q-item-section>
+			</q-item>
+			<q-item v-if="can('Configuración/Secciones')" clickable v-ripple :to="{ name: 'SectionsPage' }" active-class="text-primary">
+				<q-item-section avatar>
+					<q-icon name="fa-solid fa-people-roof" size="28px"/>
+				</q-item-section>
+				<q-item-section>Secciones</q-item-section>
 			</q-item>
 		</q-expansion-item>
 	</span>

@@ -71,12 +71,17 @@
 
 <script setup>
 import { ref, computed } from 'vue'
-import { useQuasar } from 'quasar'
+import { api } from 'boot/axios'
+import { useQuasar, LocalStorage, SessionStorage } from 'quasar'
+import { useRouter } from 'vue-router'
+import { useUserStore } from 'stores/user'
 import useHttpService from 'utils/httpService'
 import useFormartDate from 'utils/formatDate'
 
 const $q = useQuasar()
-const { get, put } =  useHttpService()
+const router = useRouter()
+const userPinia = useUserStore()
+const { put } =  useHttpService()
 const { formatDateFromNow } = useFormartDate()
 
 const notifications = ref([])
@@ -91,19 +96,33 @@ const nNotificationsNew = computed(() => {
 	return n
 })
 
+const logout = () => {
+	LocalStorage.remove('token')
+	LocalStorage.remove('user')
+	SessionStorage.clear()
+	router.push({name: 'Index'})
+	window.location.reload(true)
+}
+
 const getNotifications = (limit, seemore = false) => {
 	const url = `user/notification/${limit}`
-	get(url).then((response) => {
+	api.get(url, {
+		headers: { 
+			Authorization: `Bearer ${userPinia.token}`,
+		}
+	}).then((response) => {
 		console.log('notifications', response)
-		if(response.status >= 200 && response.status < 300) {
-			notifications.value = response.data.data
-			seeMore.value = seemore
-			for(let i = 0; i < notifications.value.length; i++) {
-				if(notifications.value[i].state === 0)
-					notifications.value[i].stateAux = 0
-				else 
-					notifications.value[i].stateAux = 1
-			}
+		notifications.value = response.data.data
+		seeMore.value = seemore
+		for(let i = 0; i < notifications.value.length; i++) {
+			if(notifications.value[i].state === 0)
+				notifications.value[i].stateAux = 0
+			else 
+				notifications.value[i].stateAux = 1
+		}
+	}).catch(error => {
+		if(error.response.status === 401 && error.response.statusText == 'Unauthorized') {
+			logout()
 		}
 	})
 }

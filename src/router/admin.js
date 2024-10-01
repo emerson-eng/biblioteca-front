@@ -71,6 +71,22 @@ let adminRoutes = [
 		permissions: ['Configuración/Editoriales']
 	}
 },
+{ 
+	path: 'configuracion/grados', name: 'DegreesPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/DegreesPage.vue'),
+	meta: {
+		permissions: ['Configuración/Grados']
+	}
+},
+{ 
+	path: 'configuracion/secciones', name: 'SectionsPage',
+	beforeEnter: auth,
+	component: () => import('pages/admin/setting/SectionsPage.vue'),
+	meta: {
+		permissions: ['Configuración/Secciones']
+	}
+},
 
 ]
 

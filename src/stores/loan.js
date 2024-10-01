@@ -8,6 +8,10 @@ export const useLoanStore = defineStore('loan', {
 		matters: [],
 		authors: [],
 		editorials: [],
+		//Student
+		students: [],
+		degrees: [],
+		sections: [],
 	}),	
 	
 	actions: {
@@ -23,6 +27,16 @@ export const useLoanStore = defineStore('loan', {
 		},
 		setEditorials(val) {
 			this.editorials = val
+		},
+
+		setStudents(val) {
+			this.students = val
+		},
+		setDegrees(val) {
+			this.degrees = val
+		},
+		setSections(val) {
+			this.sections = val
 		},
 	}
 })

@@ -64,6 +64,20 @@ const columns = [
 { style: 'white-space: normal;', name: 'dni', label: 'DNI', field: 'dni', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'name', label: 'Nombres', field: 'name', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'last_name', label: 'Apellidos', field: 'last_name', sortable: true, align: 'left' },
+{
+	style: 'white-space: normal;',
+	name: 'degree', label: 'Grado',
+	field: row => row.degree.name,
+	format: val => `${val}`,
+	sortable: true, align: 'left'
+},
+{
+	style: 'white-space: normal;',
+	name: 'section', label: 'Sección',
+	field: row => row.section.name,
+	format: val => `${val}`,
+	sortable: true, align: 'left'
+},
 { style: 'white-space: normal;', name: 'address', label: 'Dirección', field: 'address', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'email', label: 'Correo electrónico', field: 'email', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'phone', label: 'Celular', field: 'phone', sortable: true, align: 'left' },

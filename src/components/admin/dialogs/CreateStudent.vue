@@ -23,6 +23,19 @@
 				<q-card-section>
 					<q-form @submit="methodForm" class="column q-pb-md">
 						<div class="row">
+							<div class="col-6 q-pr-sm">
+								<select-degree
+								:useInject="true"
+								/>
+							</div>
+							<div class="col-6 q-pl-sm">
+								<select-section
+								:useInject="true"
+								/>
+							</div>
+						</div>
+
+						<div class="row">
 							<div class="col-12 col-sm-6" :class="$q.screen.width < 600 ? '' : 'q-pr-sm'">
 								<select-type-student
 								:useInject="true"
@@ -85,6 +98,8 @@ import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
 import useHttpService from 'utils/httpService'
 import SelectTypeStudent from 'components/admin/form/SelectTypeStudent.vue'
+import SelectDegree from 'components/admin/form/SelectDegree.vue'
+import SelectSection from 'components/admin/form/SelectSection.vue'
 
 const dataTablePinia = useDataTableStore()
 const { post, put } =  useHttpService()
@@ -103,7 +118,11 @@ const dialog = inject('dialog')
 const isUpdate = inject('isUpdate')
 
 const loadingBtn = ref(false)
+
 const typeStudentSelected = ref(null)
+const degreeSelected = ref(null)
+const sectionSelected = ref(null)
+
 const form = ref({
 	id: 1,
 	dni: '',
@@ -115,9 +134,13 @@ const form = ref({
 })
 
 provide('typeStudentSelected', typeStudentSelected)
+provide('degreeSelected', degreeSelected)
+provide('sectionSelected', sectionSelected)
 
 const openDialog = () => {
 	typeStudentSelected.value = null
+	degreeSelected.value = null
+	sectionSelected.value = null
 	form.value.dni = ''
 	form.value.name = ''
 	form.value.last_name = ''
@@ -133,6 +156,14 @@ const initUpdate = () => {
 		typeStudentSelected.value = {
 			label: props.selectRow.type_student.name,
 			value: props.selectRow.type_student.id,
+		}
+		degreeSelected.value = {
+			label: props.selectRow.degree.name,
+			value: props.selectRow.degree.id,
+		}
+		sectionSelected.value = {
+			label: props.selectRow.section.name,
+			value: props.selectRow.section.id,
 		}
 		form.value.id = props.selectRow.id
 		form.value.dni = props.selectRow.dni
@@ -188,5 +219,7 @@ const update = () => {
 
 const setData = () => {
 	form.value.type_student_id = typeStudentSelected.value.value
+	form.value.degree_id = degreeSelected.value.value
+	form.value.section_id = sectionSelected.value.value
 }
 </script>

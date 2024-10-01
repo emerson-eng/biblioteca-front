@@ -17,6 +17,8 @@ export const useDataTableStore = defineStore('dataTable', {
 		matters: [],
 		authors: [],
 		editorials: [],
+		degrees: [],
+		sections: [],
 	}),
 	
 	actions: {
@@ -53,6 +55,12 @@ export const useDataTableStore = defineStore('dataTable', {
 		},
 		setEditorials(val) {
 			this.editorials = val
+		},
+		setDegrees(val) {
+			this.degrees = val
+		},
+		setSections(val) {
+			this.sections = val
 		},
 	}
 })

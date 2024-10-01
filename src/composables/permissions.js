@@ -35,4 +35,12 @@ export const permissions = [
 	label: 'Configuración/Editoriales',
 	value: 'Configuración/Editoriales',
 },
+{
+	label: 'Configuración/Grados',
+	value: 'Configuración/Grados',
+},
+{
+	label: 'Configuración/Secciones',
+	value: 'Configuración/Secciones',
+},
 ]

@@ -1,10 +1,9 @@
 <template>
 	<div>
 		<q-select
-		v-model="studentSelected"
-		:disable="disable"
+		v-model="degreeSelected"
 		use-input
-		label="Estudiante"
+		label="Grado"
 		hide-selected
 		fill-input
 		input-debounce="0"
@@ -43,10 +42,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-	disable: {
-		type: Boolean,
-		default: false,
-	},
 })
 
 const emit = defineEmits(['isSelected'])
@@ -54,8 +49,9 @@ const emit = defineEmits(['isSelected'])
 const loanPinia = useLoanStore()
 const { get } = userHttpService()
 
-const studentSelected = props.useInject ? inject('studentSelected') : ref(null)
-const students = ref([])
+
+const degreeSelected = props.useInject ? inject('degreeSelected') : ref(null)
+const degrees = ref([])
 const optionsData = ref([])
 
 const formatData = (data) => {
@@ -65,33 +61,33 @@ const formatData = (data) => {
 			label: 'Todos',
 			value: 0
 		})
-		studentSelected.value = newData[0]
+		degreeSelected.value = newData[0]
 	}
 	for(let i = 0; i < data.length; i++) {
 		const item = {
-			label: `${data[i].name} ${data[i].last_name} - ${data[i].dni}`,
+			label: data[i].name,
 			value: data[i].id
 		}
 		newData.push(item)
 	}
-	students.value = newData
+	degrees.value = newData
 	optionsData.value = newData
 }
 
-const getData = () => {
-	get('admin/student/filter', false).then((response) => {
-		console.log('student', response)
+const getData= () => {
+	get('admin/degree/filter', false).then((response) => {
+		console.log('degree', response)
 		if(response.status >= 200 && response.status < 300) {
 			let data = response.data.data
 			formatData(data)
-			loanPinia.setStudents(data)
+			loanPinia.setDegrees(data)
 		}
 	})
 }
-if(loanPinia.students.length == 0)
+if(loanPinia.degrees.length == 0)
 	getData()
 else
-	formatData(loanPinia.students)
+	formatData(loanPinia.degrees)
 
 
 const isSelected = (val) => {
@@ -101,13 +97,13 @@ const isSelected = (val) => {
 const filterFn = (val, update, abort) => {
 	update(() => {
 		const needle = val.toLowerCase()
-		optionsData.value = students.value.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
+		optionsData.value = degrees.value.filter(v => v.label.toLowerCase().indexOf(needle) > -1)
 	})
 }
 
 const getRules = () => {
 	if(props.useRules)
-		return [ val => val && val.label.length > 0 || 'Seleccione un estudiante']
+		return [ val => val && val.label.length > 0 || 'Seleccione un grado']
 	return []
 }
 </script>
