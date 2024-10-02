@@ -96,12 +96,14 @@
 <script setup>
 import { ref, inject, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import useHttpService from 'utils/httpService'
 import SelectTypeStudent from 'components/admin/form/SelectTypeStudent.vue'
 import SelectDegree from 'components/admin/form/SelectDegree.vue'
 import SelectSection from 'components/admin/form/SelectSection.vue'
 
 const dataTablePinia = useDataTableStore()
+const loanPinia = useLoanStore()
 const { post, put } =  useHttpService()
 
 const props = defineProps({
@@ -180,6 +182,7 @@ const methodForm = () => {
 		update()
 	else
 		register()
+	loanPinia.setStudents([])
 }
 
 const register = () => {

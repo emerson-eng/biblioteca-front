@@ -22,6 +22,11 @@
 						lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese un nombre']"
 						/>
 
+						<q-input v-model="form.abbreviation"
+						type="text" label="Abreviatura"
+						lazy-rules :rules="[ val => val && val.length > 0 || 'Ingrese una abreviatura']"
+						/>
+
 						<q-btn rounded :loading="loadingBtn" :disable="loadingBtn" color="primary" type="submit" icon="save" :label="isUpdate ? 'Actualizar' : 'Registrar'" class="q-mt-md">
 							<template v-slot:loading>
 								<q-spinner-facebook />
@@ -57,10 +62,12 @@ const swithModels = inject('swithModels')
 const loadingBtn = ref(false)
 const form = ref({
 	name: '',
+	abbreviation: '',
 })
 
 const openDialog = () => {
 	form.value.name = ''
+	form.value.abbreviation = ''
 	dialog.value = true
 	isUpdate.value = false
 }
@@ -68,6 +75,7 @@ const openDialog = () => {
 const initUpdate = () => {
 	if(isUpdate.value) {
 		form.value.name = props.selectRow.name
+		form.value.abbreviation = props.selectRow.abbreviation
 	}
 }
 

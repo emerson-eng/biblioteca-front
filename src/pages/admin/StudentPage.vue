@@ -10,20 +10,43 @@
 			/>
 		</h5>
 
-		<data-table
-		exportName="Estudiantes" :keyTable="'students'"
-		:showBtnImport="true"
-		@btnImport="btnImport"
-		:loading="loading"
-		:columns="columns"
-		:rows="dataTablePinia.students"
-		:keyName="'id'"
-		@editRow="editRow"
-		@deleteRow="deleteRow"
-		:iconAdditionalColumn="'fa-solid fa-qrcode'"
-		:additionalColumnnTitle="'Generar código QR'"
-		@additionalColumn="openGenerateQr"
-		/>
+		<q-card>
+			<div class="q-pt-sm">
+				<div class="row">
+					<div class="col-12 col-sm-3 q-px-sm" :class="$q.screen.width < 600 ? 'q-px-sm' : 'q-pl-md q-pr-sm'">
+						<select-degree
+						:useInject="true"
+						:useRules="false"
+						:useAll="true"
+						@isSelected="getData"
+						/>
+					</div>
+					<div class="col-12 col-sm-3 q-px-sm">
+						<select-section
+						:useInject="true"
+						:useRules="false"
+						:useAll="true"
+						@isSelected="getData"
+						/>
+					</div>
+				</div>
+			</div>
+
+			<data-table
+			exportName="Estudiantes" :keyTable="'students'"
+			:showBtnImport="true"
+			@btnImport="btnImport"
+			:loading="loading"
+			:columns="columns"
+			:rows="dataTablePinia.students"
+			:keyName="'id'"
+			@editRow="editRow"
+			@deleteRow="deleteRow"
+			:iconAdditionalColumn="'fa-solid fa-qrcode'"
+			:additionalColumnnTitle="'Generar código QR'"
+			@additionalColumn="openGenerateQr"
+			/>
+		</q-card>
 
 		<import-student />
 		<generate-qr 
@@ -35,16 +58,20 @@
 <script setup>
 import { ref, provide } from 'vue'
 import { useDataTableStore } from 'stores/dataTable'
+import { useLoanStore } from 'stores/loan'
 import { useQuasar } from 'quasar'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateStudent from 'components/admin/dialogs/CreateStudent.vue'
 import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
 import ImportStudent from 'components/admin/import/ImportStudent.vue'
 import useHttpService from 'utils/httpService'
+import SelectDegree from 'components/admin/form/SelectDegree.vue'
+import SelectSection from 'components/admin/form/SelectSection.vue'
 
 const $q = useQuasar()
 const dataTablePinia = useDataTableStore()
-const { get, deleteApi } =  useHttpService()
+const loanPinia = useLoanStore()
+const { post, deleteApi } =  useHttpService()
 
 const columns = [
 {
@@ -90,6 +117,9 @@ const selectRow = ref({})
 const dialog = ref(false)
 const isUpdate = ref(false)
 
+const degreeSelected = ref(null)
+const sectionSelected = ref(null)
+
 const dialogImport = ref(false)
 
 const dialogGenerateQR = ref(false)
@@ -97,13 +127,19 @@ const textQR = ref('')
 
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
+provide('degreeSelected', degreeSelected)
+provide('sectionSelected', sectionSelected)
 provide('dialogImport', dialogImport)
 provide('dialogGenerateQR', dialogGenerateQR)
 
 const getData = () => {
 	loading.value = true
-	get('admin/student', false).then((response) => {
-		console.log('student', response)
+	const form = {
+		degree_id: degreeSelected.value ? degreeSelected.value.value : 0,
+		section_id: sectionSelected.value ? sectionSelected.value.value : 0,
+	}
+	post('admin/students', form, false).then((response) => {
+		console.log('students', response)
 		if(response.status >= 200 && response.status < 300) {
 			dataTablePinia.setStudents(response.data.data)
 		}
@@ -130,6 +166,7 @@ const deleteRow = (row) => {
 		if(response.status >= 200 && response.status < 300) {
 			let data = dataTablePinia.students.filter((item) => item.id != row.id)
 			dataTablePinia.setStudents(data)
+			loanPinia.setStudents([])
 		}
 	})
 }
@@ -140,6 +177,10 @@ const openGenerateQr = (row) => {
 }
 
 const btnImport = () => {
+	dialog.value = true
+	setTimeout(() => {
+		dialog.value = false
+	}, 100)
 	dialogImport.value = true
 }
 </script>

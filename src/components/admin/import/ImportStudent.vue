@@ -1,6 +1,6 @@
 <template>
 	<q-dialog v-model="dialogImport" :maximized="$q.screen.width < 700 ? true : false" transition-show="slide-up" transition-hide="slide-down" @show="initUpdate" @hide="closeDialog">
-		<q-card style="width: 650px; max-width: 650px" class="q-px-sm">
+		<q-card style="width: 750px; max-width: 750px" class="q-px-sm">
 			<q-card-section class="row items-center q-pb-none">
 				<div class="text-h6 text-color-dark text-bold">Importar Excel</div>
 				<q-space />
@@ -70,10 +70,12 @@
 
 <script setup>
 import { ref, inject } from 'vue'
+import { useLoanStore } from 'stores/loan'
 import readXlsxFile from 'read-excel-file'
 import useHttpService from 'utils/httpService'
 import useAlerts from 'utils/alerts'
 
+const loanPinia = useLoanStore()
 const { post } =  useHttpService()
 const { alertNotify } = useAlerts()
 
@@ -125,9 +127,11 @@ const importExcel = () => {
 							dni: rows[i][0],
 							name: rows[i][1],
 							last_name: rows[i][2],
-							address: rows[i][3],
-							email: rows[i][4],
-							phone: rows[i][5],
+							degree_id: findDegree(rows[i][3]),
+							section_id: findSection(rows[i][4]),
+							address: rows[i][5],
+							email: rows[i][6],
+							phone: rows[i][7],
 						})
 					}
 				}
@@ -139,6 +143,16 @@ const importExcel = () => {
 	catch {
 		alertNotify('El Excel a importar no se encuentra en un formato adecuado.', 'warning')
 	}
+}
+
+const findDegree = (val) => {
+	let data = loanPinia.degrees.find((item) => item.name.toLowerCase() == val.toLowerCase())
+	return data ? data.id : 1
+}
+
+const findSection = (val) => {
+	let data = loanPinia.sections.find((item) => item.name.toLowerCase() == val.toLowerCase())
+	return data ? data.id : 1
 }
 
 </script>

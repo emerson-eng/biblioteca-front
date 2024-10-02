@@ -49,6 +49,7 @@ const columns = [
 	sortable: false,
 },
 { style: 'white-space: normal;', name: 'name', label: 'Nombre', field: 'name', sortable: true, align: 'left' },
+{ style: 'white-space: normal;', name: 'abbreviation', label: 'Abreviatura', field: 'abbreviation', sortable: true, align: 'left' },
 { 
 	name: 'swith', 
 	label: 'Estado', 
