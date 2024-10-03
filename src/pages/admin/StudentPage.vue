@@ -29,6 +29,17 @@
 						@isSelected="getData"
 						/>
 					</div>
+					<div class="col-12 col-sm-6 q-px-sm" :class="$q.screen.width < 600 ? 'q-pt-sm' : ''">
+						<q-btn no-caps
+						color="primary"
+						icon="fa-solid fa-address-card"
+						label="Descargar carnet en bloque"
+						class="q-mt-md"
+						:loading="loadingBtnBlock" 
+						:disable="loadingBtnBlock"
+						@click="exportBlockPDF"
+						/>
+					</div>
 				</div>
 			</div>
 
@@ -42,36 +53,45 @@
 			:keyName="'id'"
 			@editRow="editRow"
 			@deleteRow="deleteRow"
-			:iconAdditionalColumn="'fa-solid fa-qrcode'"
-			:additionalColumnnTitle="'Generar código QR'"
-			@additionalColumn="openGenerateQr"
+			:iconAdditionalColumn="'fa-solid fa-address-card'"
+			:additionalColumnnTitle="'Imprimir carnet'"
+			:currentpush="currentpush"
+			:loadingBtndditional="loadingBtndditional"
+			@additionalColumn="exportPDF"
 			/>
 		</q-card>
 
 		<import-student />
-		<generate-qr 
-		:textQR="textQR" 
+		<show-PDF
+		:urlPDF="urlPDF"
+		titleDialog="Carnet de Estudiante"
+		:namePDF="namePDF"
 		/>
 	</q-page>
 </template>
 
 <script setup>
 import { ref, provide } from 'vue'
+import { useUserStore } from 'stores/user'
 import { useDataTableStore } from 'stores/dataTable'
 import { useLoanStore } from 'stores/loan'
 import { useQuasar } from 'quasar'
+import { api } from 'boot/axios'
 import DataTable from 'components/admin/dataTable/DataTable.vue'
 import CreateStudent from 'components/admin/dialogs/CreateStudent.vue'
-import GenerateQr from 'components/admin/dialogs/GenerateQr.vue'
 import ImportStudent from 'components/admin/import/ImportStudent.vue'
+import ShowPDF from 'components/admin/dialogs/ShowPDF.vue'
 import useHttpService from 'utils/httpService'
 import SelectDegree from 'components/admin/form/SelectDegree.vue'
 import SelectSection from 'components/admin/form/SelectSection.vue'
+import useAlerts from 'utils/alerts'
 
 const $q = useQuasar()
+const userPinia = useUserStore()
 const dataTablePinia = useDataTableStore()
 const loanPinia = useLoanStore()
 const { post, deleteApi } =  useHttpService()
+const { alertNotify } = useAlerts()
 
 const columns = [
 {
@@ -108,7 +128,7 @@ const columns = [
 { style: 'white-space: normal;', name: 'address', label: 'Dirección', field: 'address', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'email', label: 'Correo electrónico', field: 'email', sortable: true, align: 'left' },
 { style: 'white-space: normal;', name: 'phone', label: 'Celular', field: 'phone', sortable: true, align: 'left' },
-{ name: 'additionalColumn', label: 'QR', field: '', align: 'center' },
+{ name: 'additionalColumn', label: 'Carnet', field: '', align: 'center' },
 { name: 'actions', label: 'Acciones', field: '', align: 'center' },
 ]
 
@@ -122,15 +142,20 @@ const sectionSelected = ref(null)
 
 const dialogImport = ref(false)
 
-const dialogGenerateQR = ref(false)
-const textQR = ref('')
+const loadingBtnBlock = ref(false)
+const loadingBtndditional = ref(false)
+const currentpush = ref(0)
+
+const dialogShowPDF = ref(false)
+const urlPDF = ref(null)
+const namePDF = ref('')
 
 provide('dialog', dialog)
 provide('isUpdate', isUpdate)
 provide('degreeSelected', degreeSelected)
 provide('sectionSelected', sectionSelected)
 provide('dialogImport', dialogImport)
-provide('dialogGenerateQR', dialogGenerateQR)
+provide('dialogShowPDF', dialogShowPDF)
 
 const getData = () => {
 	loading.value = true
@@ -171,9 +196,59 @@ const deleteRow = (row) => {
 	})
 }
 
-const openGenerateQr = (row) => {
-	textQR.value = row.dni
-	dialogGenerateQR.value = true
+const exportPDF = (row) => {
+	loadingBtndditional.value = true
+	currentpush.value = row.id
+	const url = `admin/student-card/${row.id}`
+	api.get(url, {
+		headers: { Authorization: `Bearer ${userPinia.token}` },
+		responseType: 'blob',
+	}).then((response) => {
+		if(response.status >= 200 && response.status < 300) {
+			var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}))
+			urlPDF.value = fileURL
+			dialogShowPDF.value = true
+			namePDF.value = row.name+' '+row.last_name
+		}
+	}).catch((error) => {
+		const messageError = error.response.data.message
+		alertNotify(messageError ? messageError : 'Ocurrio un error, vuelve intentarlo mas tarde.', 'negative')
+	}).finally(() => {
+		currentpush.value = 0
+		loadingBtndditional.value = false
+	})
+}
+
+const exportBlockPDF = () => {
+	if(degreeSelected.value.value == 0) {
+		alertNotify('Seleccione un grado.', 'warning')
+		return;
+	}
+	if(sectionSelected.value.value == 0) {
+		alertNotify('Seleccione una sección.', 'warning')
+		return;
+	}
+	loadingBtnBlock.value = true
+	const form = {
+		degree_id: degreeSelected.value.value,
+		section_id: sectionSelected.value.value,
+	}
+	api.post('admin/students-card', form, {
+		headers: { Authorization: `Bearer ${userPinia.token}` },
+		responseType: 'blob',
+	}).then((response) => {
+		if(response.status >= 200 && response.status < 300) {
+			var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}))
+			urlPDF.value = fileURL
+			dialogShowPDF.value = true
+			namePDF.value = `Estudiantes-${degreeSelected.value.abbreviation}${sectionSelected.value.label}`
+		}
+	}).catch((error) => {
+		const messageError = error.response.data.message
+		alertNotify(messageError ? messageError : 'Ocurrio un error, vuelve intentarlo mas tarde.', 'negative')
+	}).finally(() => {
+		loadingBtnBlock.value = false
+	})
 }
 
 const btnImport = () => {

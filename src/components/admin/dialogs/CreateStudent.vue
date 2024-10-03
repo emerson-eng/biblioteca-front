@@ -162,6 +162,7 @@ const initUpdate = () => {
 		degreeSelected.value = {
 			label: props.selectRow.degree.name,
 			value: props.selectRow.degree.id,
+			abbreviation: props.selectRow.degree.abbreviation,
 		}
 		sectionSelected.value = {
 			label: props.selectRow.section.name,

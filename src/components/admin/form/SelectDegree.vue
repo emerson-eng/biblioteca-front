@@ -66,7 +66,8 @@ const formatData = (data) => {
 	for(let i = 0; i < data.length; i++) {
 		const item = {
 			label: data[i].name,
-			value: data[i].id
+			value: data[i].id,
+			abbreviation: data[i].abbreviation,
 		}
 		newData.push(item)
 	}
