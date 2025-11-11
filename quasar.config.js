@@ -66,10 +66,10 @@ module.exports = configure(function (ctx) {
 
       env: {
         API: ctx.dev
-        ? 'http://localhost/biblioteca/biblioteca-back/public/api/'
+        ? 'http://localhost/biblioteca-back/public/api/'
         : 'https://hotel.cetpros.com/api/',
         urlImg: ctx.dev
-        ? 'http://localhost/biblioteca/biblioteca-back/public'
+        ? 'http://localhost/biblioteca-back/public'
         : 'https://hotel.cetpros.com',
         versionCode: 1,
       },
