@@ -64,15 +64,22 @@ module.exports = configure(function (ctx) {
         composables: path.resolve(__dirname, './src/composables'),
       },
 
-      env: {
-        API: ctx.dev
-        ? 'http://localhost/biblioteca-back/public/api/'
-        : 'https://hotel.cetpros.com/api/',
-        urlImg: ctx.dev
-        ? 'http://localhost/biblioteca-back/public'
-        : 'https://hotel.cetpros.com',
-        versionCode: 1,
-      },
+
+env: {
+  API: ctx.dev
+  ? 'http://localhost/biblioteca-back/public/api/'
+  : '/api/',                           // ← Ruta relativa
+  urlImg: ctx.dev
+  ? 'http://localhost/biblioteca-back/public'
+  : '',                               // ← Vacío para rutas relativas
+  versionCode: 1,
+},
+
+
+
+
+
+
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
