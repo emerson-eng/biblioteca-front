@@ -2,8 +2,8 @@
   "name": "biblioteca-front",
   "version": "0.0.1",
   "description": "A Quasar Project",
-  "productName": "IE Concertada Solaris - Andahuaylas",
-  "author": "Yefer Espinoza <espinozayefer96@gmail.com>",
+  "productName": "Ricardo Palma - Uripa",
+  "author": "Ricardo Palma  <ricardopalma@gmail.com>",
   "private": true,
   "scripts": {
     "lint": "eslint --ext .js,.vue ./",
